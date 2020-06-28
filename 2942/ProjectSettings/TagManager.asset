@@ -47,9 +47,12 @@ TagManager:
   - name: Bombs
     uniqueID: 353844287
     locked: 0
-  - name: Player
-    uniqueID: 227863821
+  - name: Proyectiles
+    uniqueID: 2056111305
     locked: 0
   - name: Enemies
     uniqueID: 4133177637
+    locked: 0
+  - name: Player
+    uniqueID: 227863821
     locked: 0

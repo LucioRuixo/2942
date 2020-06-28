@@ -6,19 +6,25 @@ public class PlayerController : MonoBehaviour
 
     float width;
     float height;
+    float leftScreenLimit;
+    float rightScreenLimit;
+    float lowerScreenLimit;
+    float upperScreenLimit;
 
-    Vector2 screenBounds;
     Vector3 movement;
 
+    public GameManager gameManager;
     public GameObject bombPrefab;
 
     void Start()
     {
-        width = transform.GetComponent<SpriteRenderer>().size.x / 2f;
-        height = transform.GetComponent<SpriteRenderer>().size.y / 2f;
+        width = transform.GetComponent<SpriteRenderer>().bounds.size.x / 2f;
+        height = transform.GetComponent<SpriteRenderer>().bounds.size.y / 2f;
 
-        Vector3 position = new Vector3(Screen.width, Screen.height, Camera.main.transform.position.z);
-        screenBounds = Camera.main.ScreenToWorldPoint(position);
+        leftScreenLimit = gameManager.leftScreenLimit;
+        rightScreenLimit = gameManager.rightScreenLimit;
+        lowerScreenLimit = gameManager.lowerScreenLimit;
+        upperScreenLimit = gameManager.upperScreenLimit;
     }
 
     void Update()
@@ -47,8 +53,8 @@ public class PlayerController : MonoBehaviour
         Vector3 position = transform.position;
         position += movement * model.MovementSpeed * Time.deltaTime;
 
-        position.x = Mathf.Clamp(position.x, screenBounds.x + width, screenBounds.x * -1 - width);
-        position.y = Mathf.Clamp(position.y, screenBounds.y + height, screenBounds.y * -1 - height);
+        position.x = Mathf.Clamp(position.x, rightScreenLimit + width, leftScreenLimit - width);
+        position.y = Mathf.Clamp(position.y, lowerScreenLimit + height, upperScreenLimit - height);
 
         transform.position = position;
     }
