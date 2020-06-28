@@ -1,8 +1,7 @@
 ﻿using UnityEngine;
 
-public class LocustProyectile : MonoBehaviour
+public class Proyectile : MonoBehaviour
 {
-    float movementSpeed = 15f;
     float height;
     float positionYGoal;
 
@@ -16,20 +15,23 @@ public class LocustProyectile : MonoBehaviour
 
         height = transform.GetComponent<SpriteRenderer>().bounds.size.y / 2f;
         positionYGoal = gameManager.lowerScreenLimit - height;
-
-        movement = new Vector3(0f, movementSpeed, 0f);
     }
 
-    void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
         Destroy(gameObject);
     }
 
     void Update()
     {
-        transform.position -= movement * Time.deltaTime;
+        transform.position += movement * Time.deltaTime;
 
         if (transform.position.y <= positionYGoal)
             Destroy(gameObject);
+    }
+
+    public void SetMovement(Vector3 forward, float movementSpeed)
+    {
+        movement = forward * movementSpeed * 1.5f;
     }
 }

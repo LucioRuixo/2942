@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 
-public class LocustController : MonoBehaviour
+public class EnemyController : MonoBehaviour
 {
-    public LocustModel model;
+    public ShipModel model;
 
     enum States
     {
@@ -10,25 +10,21 @@ public class LocustController : MonoBehaviour
         Shooting
     }
 
-    enum RaycastPosition
-    {
-        Right,
-        Center,
-        Left
-    }
-
     float width;
     float height;
+    float movementSpeed;
     float positionYGoal;
     float shootingTimer = 0f;
 
+    [HideInInspector] public Vector3 forward;
     Vector3 movement;
-    Vector3 forward;
 
     States state;
 
     GameManager gameManager;
     public GameObject proyectilePrefab;
+    public Transform rightCannon;
+    public Transform leftCannon;
 
     void Start()
     {
@@ -38,22 +34,23 @@ public class LocustController : MonoBehaviour
         height = transform.GetComponent<SpriteRenderer>().bounds.size.y / 2f;
         positionYGoal = gameManager.lowerScreenLimit - height;
 
-        movement = new Vector3(0f, model.MovementSpeed, 0f);
+        movementSpeed = model.MovementSpeed;
         forward = transform.up;
+        movement = forward * movementSpeed;
 
         state = States.NotShooting;
     }
 
     void Update()
     {
-        transform.position -= movement * Time.deltaTime;
+        transform.position += movement * Time.deltaTime;
 
         if (transform.position.y <= positionYGoal)
             Destroy(gameObject);
 
         if (state == States.NotShooting)
         {
-            if (PlayerDetected(RaycastPosition.Right) || PlayerDetected(RaycastPosition.Left) || PlayerDetected(RaycastPosition.Center))
+            if (PlayerDetected())
             {
                 state = States.Shooting;
                 Shoot();
@@ -69,7 +66,7 @@ public class LocustController : MonoBehaviour
                 shootingTimer = 0f;
             }
 
-            if (!PlayerDetected(RaycastPosition.Right) && !PlayerDetected(RaycastPosition.Left) && !PlayerDetected(RaycastPosition.Center))
+            if (!PlayerDetected())
             {
                 state = States.NotShooting;
                 shootingTimer = 0f;
@@ -77,15 +74,11 @@ public class LocustController : MonoBehaviour
         }
     }
 
-    bool PlayerDetected(RaycastPosition raycastPosition)
+    bool PlayerDetected()
     {
         float rayDistance = 7.5f;
 
-        Vector3 position = transform.position;
-
-        if (raycastPosition != RaycastPosition.Center)
-            position.x += raycastPosition == RaycastPosition.Right ? -width : width;
-        position.y -= height;
+        Vector3 position = transform.position + forward * height;
 
         Collider2D collider;
         Ray ray;
@@ -104,13 +97,12 @@ public class LocustController : MonoBehaviour
 
     void Shoot()
     {
-        float yOffset = -0.75f;
-        float proyectileYValue = transform.position.y + yOffset;
+        Proyectile proyectile;
 
-        Vector2 rightProyectilePosition = new Vector2(transform.position.x - width, proyectileYValue);
-        Vector2 leftProyectilePosition = new Vector2(transform.position.x + width, proyectileYValue);
+        proyectile = Instantiate(proyectilePrefab, rightCannon.position, Quaternion.identity).GetComponent<Proyectile>();
+        proyectile.SetMovement(forward, movementSpeed);
 
-        Instantiate(proyectilePrefab, rightProyectilePosition, Quaternion.identity);
-        Instantiate(proyectilePrefab, leftProyectilePosition, Quaternion.identity);
+        proyectile = Instantiate(proyectilePrefab, leftCannon.position, Quaternion.identity).GetComponent<Proyectile>();
+        proyectile.SetMovement(forward, movementSpeed);
     }
 }

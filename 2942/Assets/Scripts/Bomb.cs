@@ -1,16 +1,15 @@
 ﻿using UnityEngine;
 
-public class BombController : MonoBehaviour
+public class Bomb : MonoBehaviour
 {
-    public BombModel model;
-
+    float timeToExplode = 3f;
     float explosionTimer = 0f;
 
     void Update()
     {
         explosionTimer += Time.deltaTime;
         
-        if (explosionTimer >= model.TimeToExplode)
+        if (explosionTimer >= timeToExplode)
             Destroy(gameObject);
     }
 }

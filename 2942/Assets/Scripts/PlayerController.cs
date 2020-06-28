@@ -2,7 +2,7 @@
 
 public class PlayerController : MonoBehaviour
 {
-    public PlayerModel model;
+    public ShipModel model;
 
     float width;
     float height;

@@ -45,8 +45,9 @@ public class LocustManager : MonoBehaviour
         float positionXValue = Random.Range(rightScreenLimit + width, leftScreenLimit - width);
 
         Vector3 position = new Vector3(positionXValue, initialYValue);
-        Quaternion rotation = new Quaternion();
-        rotation.eulerAngles = new Vector3(0f, 0f, 180f);
+
+        Vector3 rotationEuler = new Vector3(0f, 0f, 180f);
+        Quaternion rotation = Quaternion.Euler(rotationEuler);
 
         Instantiate(locustPrefab, position, rotation, transform);
     }
