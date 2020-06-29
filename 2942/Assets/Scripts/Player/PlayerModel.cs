@@ -5,31 +5,31 @@ public class PlayerModel : MonoBehaviour
 {
     public ShipSO stats;
 
-    public int Life { set; get; }
-    public int Damage { set; get; }
+    [HideInInspector] public int life;
+    [HideInInspector] public int damage;
 
-    public float MovementSpeed { set; get; }
-    public float ShootingInterval { set; get; }
+    [HideInInspector] public float movementSpeed;
+    [HideInInspector] public float shootingInterval;
 
     public static event Action<int> onLifeUpdate;
 
     void Start()
     {
-        Life = stats.life;
-        Damage = stats.damage;
+        life = stats.life;
+        damage = stats.damage;
 
-        MovementSpeed = stats.movementSpeed;
-        ShootingInterval = stats.shootingInterval;
+        movementSpeed = stats.movementSpeed;
+        shootingInterval = stats.shootingInterval;
 
         if (onLifeUpdate != null)
-            onLifeUpdate(Life);
+            onLifeUpdate(life);
     }
 
     public void TakeDamage(int damage)
     {
-        Life -= damage;
+        life -= damage;
 
         if (onLifeUpdate != null)
-            onLifeUpdate(Life);
+            onLifeUpdate(life);
     }
 }

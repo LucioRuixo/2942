@@ -33,20 +33,25 @@ public class EnemyController : MonoBehaviour
     public Transform rightCannon;
     public Transform leftCannon;
 
+    void OnEnable()
+    {
+        Bomb.onBombExplosion += Explode;
+    }
+
     void Start()
     {
         gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
 
-        damage = model.Damage;
+        damage = model.damage;
 
         height = transform.GetComponent<SpriteRenderer>().bounds.size.y / 2f;
-        shootingInterval = model.ShootingInterval;
+        shootingInterval = model.shootingInterval;
         leftScreenLimit = gameManager.leftScreenLimit;
         rightScreenLimit = gameManager.rightScreenLimit;
         lowerScreenLimit = gameManager.lowerScreenLimit;
         upperScreenLimit = gameManager.upperScreenLimit;
 
-        movementSpeed = model.MovementSpeed;
+        movementSpeed = model.movementSpeed;
         forward = transform.up;
         movement = forward * movementSpeed;
 
@@ -66,6 +71,11 @@ public class EnemyController : MonoBehaviour
         }
         else if (OffScreen())
             Destroy(gameObject);
+    }
+
+    void OnDisable()
+    {
+        Bomb.onBombExplosion -= Explode;
     }
 
     void ProcessStates()
@@ -147,5 +157,10 @@ public class EnemyController : MonoBehaviour
                ||
                y < lowerScreenLimit - height || y > upperScreenLimit + height ?
                true : false;
+    }
+
+    void Explode()
+    {
+        Destroy(gameObject);
     }
 }
