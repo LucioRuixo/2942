@@ -2,8 +2,8 @@
 
 public class LocustManager : MonoBehaviour
 {
-    float minTimeToGenerate = 0.25f;
-    float maxTimeToGenerate = 2f;
+    float minTimeToGenerate = 0.1f;
+    float maxTimeToGenerate = 1f;
     float generationTimer = 0f;
     float timeToGenerate;
     float width;

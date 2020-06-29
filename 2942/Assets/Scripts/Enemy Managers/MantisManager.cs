@@ -2,8 +2,8 @@
 
 public class MantisManager : MonoBehaviour
 {
-    float minTimeToGenerate = 0.75f;
-    float maxTimeToGenerate = 3f;
+    float minTimeToGenerate = 0.25f;
+    float maxTimeToGenerate = 2f;
     float generationTimer = 0f;
     float timeToGenerate;
     float width;

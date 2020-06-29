@@ -4,6 +4,7 @@
 public class ShipSO : ScriptableObject
 {
     public int life;
+    public int damage;
 
     public float movementSpeed;
     public float shootingInterval;
