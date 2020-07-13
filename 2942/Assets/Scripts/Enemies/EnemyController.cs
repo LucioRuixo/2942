@@ -28,10 +28,10 @@ public class EnemyController : MonoBehaviour
 
     States state;
 
-    GameManager gameManager;
     public GameObject proyectilePrefab;
     public Transform rightCannon;
     public Transform leftCannon;
+    Transform proyectileContainer;
 
     void OnEnable()
     {
@@ -40,22 +40,18 @@ public class EnemyController : MonoBehaviour
 
     void Start()
     {
-        gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
-
         damage = model.damage;
 
         height = transform.GetComponent<SpriteRenderer>().bounds.size.y / 2f;
         shootingInterval = model.shootingInterval;
-        leftScreenLimit = gameManager.leftScreenLimit;
-        rightScreenLimit = gameManager.rightScreenLimit;
-        lowerScreenLimit = gameManager.lowerScreenLimit;
-        upperScreenLimit = gameManager.upperScreenLimit;
 
         movementSpeed = model.movementSpeed;
         forward = transform.up;
         movement = forward * movementSpeed;
 
         state = States.NotShooting;
+
+        proyectileContainer = GameObject.Find("Proyectile Container").transform;
     }
 
     void Update()
@@ -84,7 +80,6 @@ public class EnemyController : MonoBehaviour
         {
             if (shootingTimer < shootingInterval)
                 shootingTimer += Time.deltaTime;
-
 
             if (PlayerDetected())
             {
@@ -139,13 +134,15 @@ public class EnemyController : MonoBehaviour
 
     void Shoot()
     {
-        Proyectile proyectile;
+        Proyectile newProyectile;
 
-        proyectile = Instantiate(proyectilePrefab, rightCannon.position, Quaternion.identity).GetComponent<Proyectile>();
-        proyectile.Initialize(false, damage, movementSpeed, forward);
+        newProyectile = Instantiate(proyectilePrefab, rightCannon.position, Quaternion.identity, proyectileContainer).GetComponent<Proyectile>();
+        newProyectile.InitializeAsEnemyProyectile(damage, movementSpeed, forward);
+        newProyectile.SetScreenLimits(leftScreenLimit, rightScreenLimit, upperScreenLimit, lowerScreenLimit);
 
-        proyectile = Instantiate(proyectilePrefab, leftCannon.position, Quaternion.identity).GetComponent<Proyectile>();
-        proyectile.Initialize(false, damage, movementSpeed, forward);
+        newProyectile = Instantiate(proyectilePrefab, leftCannon.position, Quaternion.identity, proyectileContainer).GetComponent<Proyectile>();
+        newProyectile.InitializeAsEnemyProyectile(damage, movementSpeed, forward);
+        newProyectile.SetScreenLimits(leftScreenLimit, rightScreenLimit, upperScreenLimit, lowerScreenLimit);
     }
 
     bool OffScreen()
@@ -162,5 +159,13 @@ public class EnemyController : MonoBehaviour
     void Explode()
     {
         Destroy(gameObject);
+    }
+
+    public void SetScreenLimits(float left, float right, float top, float bottom)
+    {
+        leftScreenLimit = left;
+        rightScreenLimit = right;
+        upperScreenLimit = top;
+        lowerScreenLimit = bottom;
     }
 }

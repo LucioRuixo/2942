@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b67803880928f9b49a93f40e9ad636f6, type: 3}
   m_Name: Mantis
   m_EditorClassIdentifier: 
-  life: 25
+  energy: 50
   damage: 5
   movementSpeed: 12.5
   shootingInterval: 0.2

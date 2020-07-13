@@ -5,31 +5,89 @@ public class PlayerModel : MonoBehaviour
 {
     public ShipSO stats;
 
-    [HideInInspector] public int life;
-    [HideInInspector] public int damage;
+    public int score;
 
-    [HideInInspector] public float movementSpeed;
-    [HideInInspector] public float shootingInterval;
+    [Header("From scriptable object: ")]
+    public int energy;
+    public int damage;
 
-    public static event Action<int> onLifeUpdate;
+    public float movementSpeed;
+    public float shootingInterval;
+
+    public static event Action<int> onEnergyUpdate;
+    public static event Action<int> onScoreUpdate;
+    public static event Action onDamageTaken;
+    public static event Action<bool, int> onDeath;
+    public static event Action<bool, int> onVictory;
+
+    void OnEnable()
+    {
+        LevelManager.onLastLevelCompleted += SetVictoryFinalScore;
+
+        EnemyModel.onDeath += IncreaseScore;
+    }
 
     void Start()
     {
-        life = stats.life;
+        energy = stats.energy;
         damage = stats.damage;
+        score = 0;
 
         movementSpeed = stats.movementSpeed;
         shootingInterval = stats.shootingInterval;
 
-        if (onLifeUpdate != null)
-            onLifeUpdate(life);
+        if (onEnergyUpdate != null)
+            onEnergyUpdate(energy);
+
+        if (onScoreUpdate != null)
+            onScoreUpdate(score);
+    }
+
+    void OnDisable()
+    {
+        LevelManager.onLastLevelCompleted += SetVictoryFinalScore;
+
+        EnemyModel.onDeath -= IncreaseScore;
+    }
+
+    void IncreaseScore()
+    {
+        score += 100;
+
+        if (onScoreUpdate != null)
+            onScoreUpdate(score);
+    }
+
+    void SetVictoryFinalScore()
+    {
+        if (onVictory != null)
+            onVictory(true, score);
     }
 
     public void TakeDamage(int damage)
     {
-        life -= damage;
+        energy = Mathf.Clamp(energy - damage, 0, 100);
 
-        if (onLifeUpdate != null)
-            onLifeUpdate(life);
+        if (onEnergyUpdate != null)
+            onEnergyUpdate(energy);
+
+        if (onDamageTaken != null)
+            onDamageTaken();
+
+        if (energy == 0)
+        {
+            if (onDeath != null)
+                onDeath(false, score);
+
+            Destroy(gameObject);
+        }
+    }
+
+    public void RefillEnergy()
+    {
+        energy = 100;
+
+        if (onEnergyUpdate != null)
+            onEnergyUpdate(energy);
     }
 }

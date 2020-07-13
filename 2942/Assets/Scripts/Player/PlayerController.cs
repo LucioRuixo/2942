@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -6,13 +7,15 @@ public class PlayerController : MonoBehaviour
     public PlayerModel model;
 
     bool canPlaceBomb = false;
+    bool powerPlusOn = false;
 
     int damage;
 
+    public float bombCooldown;
+    public float powerPlusDuration;
     float width;
     float height;
     float movementSpeed;
-    float bombCooldown = 10f;
     float bombTimer = 0f;
     float leftScreenLimit;
     float rightScreenLimit;
@@ -22,13 +25,22 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public Vector3 forward;
     Vector3 movement;
 
-    public GameManager gameManager;
     public GameObject bombPrefab;
     public GameObject proyectilePrefab;
     public Transform rightCannon;
     public Transform leftCannon;
+    public Transform proyectileContainer;
 
     public static event Action<bool> onBombStateUpdate;
+    public static event Action onLevelEndReached;
+
+    void OnEnable()
+    {
+        GameManager.onScreenLimitsSetting += SetScreenLimits;
+
+        Item.onEnergyPlus += ApplyEnergyPlus;
+        Item.onPowerPlus += ApplyPowerPlus;
+    }
 
     void Start()
     {
@@ -37,15 +49,17 @@ public class PlayerController : MonoBehaviour
         width = transform.GetComponent<SpriteRenderer>().bounds.size.x / 2f;
         height = transform.GetComponent<SpriteRenderer>().bounds.size.y / 2f;
         movementSpeed = model.movementSpeed;
-        leftScreenLimit = gameManager.leftScreenLimit;
-        rightScreenLimit = gameManager.rightScreenLimit;
-        lowerScreenLimit = gameManager.lowerScreenLimit;
-        upperScreenLimit = gameManager.upperScreenLimit;
 
         forward = transform.up;
 
         if (onBombStateUpdate != null)
             onBombStateUpdate(canPlaceBomb);
+    }
+
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.tag == "Level End" && onLevelEndReached != null)
+            onLevelEndReached();
     }
 
     void Update()
@@ -64,6 +78,22 @@ public class PlayerController : MonoBehaviour
                     onBombStateUpdate(canPlaceBomb);
             }
         }
+    }
+
+    void OnDisable()
+    {
+        GameManager.onScreenLimitsSetting -= SetScreenLimits;
+
+        Item.onEnergyPlus -= ApplyEnergyPlus;
+        Item.onPowerPlus -= ApplyPowerPlus;
+    }
+
+    void SetScreenLimits(float left, float right, float top, float bottom)
+    {
+        leftScreenLimit = left;
+        rightScreenLimit = right;
+        upperScreenLimit = top;
+        lowerScreenLimit = bottom;
     }
 
     void ProcessInput()
@@ -103,11 +133,13 @@ public class PlayerController : MonoBehaviour
 
         Proyectile proyectile;
 
-        proyectile = Instantiate(proyectilePrefab, rightCannon.position, rotation).GetComponent<Proyectile>();
-        proyectile.Initialize(true, damage, movementSpeed, forward);
+        proyectile = Instantiate(proyectilePrefab, rightCannon.position, rotation, proyectileContainer).GetComponent<Proyectile>();
+        proyectile.InitializeAsPlayerProyectile(powerPlusOn, damage, movementSpeed, forward);
+        proyectile.SetScreenLimits(leftScreenLimit, rightScreenLimit, upperScreenLimit, lowerScreenLimit);
 
-        proyectile = Instantiate(proyectilePrefab, leftCannon.position, rotation).GetComponent<Proyectile>();
-        proyectile.Initialize(true, damage, movementSpeed, forward);
+        proyectile = Instantiate(proyectilePrefab, leftCannon.position, rotation, proyectileContainer).GetComponent<Proyectile>();
+        proyectile.InitializeAsPlayerProyectile(powerPlusOn, damage, movementSpeed, forward);
+        proyectile.SetScreenLimits(leftScreenLimit, rightScreenLimit, upperScreenLimit, lowerScreenLimit);
     }
 
     void PlaceBomb()
@@ -119,5 +151,24 @@ public class PlayerController : MonoBehaviour
 
         if (onBombStateUpdate != null)
             onBombStateUpdate(canPlaceBomb);
+    }
+
+    void ApplyEnergyPlus()
+    {
+        model.RefillEnergy();
+    }
+
+    void ApplyPowerPlus()
+    {
+        powerPlusOn = true;
+
+        StartCoroutine(PowerPlusTimer(powerPlusDuration));
+    }
+
+    IEnumerator PowerPlusTimer(float duration)
+    {
+        yield return new WaitForSeconds(duration);
+
+        powerPlusOn = false;
     }
 }

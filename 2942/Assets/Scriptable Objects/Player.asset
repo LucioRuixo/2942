@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b67803880928f9b49a93f40e9ad636f6, type: 3}
   m_Name: Player
   m_EditorClassIdentifier: 
-  life: 100
+  energy: 100
   damage: 75
   movementSpeed: 10
   shootingInterval: 0.2
