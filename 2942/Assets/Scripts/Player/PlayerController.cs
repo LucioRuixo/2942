@@ -131,15 +131,15 @@ public class PlayerController : MonoBehaviour
         Vector3 rotationEuler = new Vector3(0f, 0f, 180f);
         Quaternion rotation = Quaternion.Euler(rotationEuler);
 
-        Proyectile proyectile;
+        Proyectile newProyectile;
 
-        proyectile = Instantiate(proyectilePrefab, rightCannon.position, rotation, proyectileContainer).GetComponent<Proyectile>();
-        proyectile.InitializeAsPlayerProyectile(powerPlusOn, damage, movementSpeed, forward);
-        proyectile.SetScreenLimits(leftScreenLimit, rightScreenLimit, upperScreenLimit, lowerScreenLimit);
+        newProyectile = Instantiate(proyectilePrefab, rightCannon.position, rotation, proyectileContainer).GetComponent<Proyectile>();
+        newProyectile.InitializeAsPlayerProyectile(powerPlusOn, damage, movementSpeed);
+        newProyectile.SetScreenLimits(leftScreenLimit, rightScreenLimit, upperScreenLimit, lowerScreenLimit);
 
-        proyectile = Instantiate(proyectilePrefab, leftCannon.position, rotation, proyectileContainer).GetComponent<Proyectile>();
-        proyectile.InitializeAsPlayerProyectile(powerPlusOn, damage, movementSpeed, forward);
-        proyectile.SetScreenLimits(leftScreenLimit, rightScreenLimit, upperScreenLimit, lowerScreenLimit);
+        newProyectile = Instantiate(proyectilePrefab, leftCannon.position, rotation, proyectileContainer).GetComponent<Proyectile>();
+        newProyectile.InitializeAsPlayerProyectile(powerPlusOn, damage, movementSpeed);
+        newProyectile.SetScreenLimits(leftScreenLimit, rightScreenLimit, upperScreenLimit, lowerScreenLimit);
     }
 
     void PlaceBomb()

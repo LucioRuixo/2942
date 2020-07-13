@@ -134,14 +134,18 @@ public class EnemyController : MonoBehaviour
 
     void Shoot()
     {
+        Vector3 addedRotationEuler = new Vector3(0f, 0f, 180f);
+        Quaternion addedRotation = Quaternion.Euler(addedRotationEuler);
+        Quaternion rotation = transform.rotation * addedRotation;
+
         Proyectile newProyectile;
 
-        newProyectile = Instantiate(proyectilePrefab, rightCannon.position, Quaternion.identity, proyectileContainer).GetComponent<Proyectile>();
-        newProyectile.InitializeAsEnemyProyectile(damage, movementSpeed, forward);
+        newProyectile = Instantiate(proyectilePrefab, rightCannon.position, rotation, proyectileContainer).GetComponent<Proyectile>();
+        newProyectile.InitializeAsEnemyProyectile(damage, movementSpeed);
         newProyectile.SetScreenLimits(leftScreenLimit, rightScreenLimit, upperScreenLimit, lowerScreenLimit);
 
-        newProyectile = Instantiate(proyectilePrefab, leftCannon.position, Quaternion.identity, proyectileContainer).GetComponent<Proyectile>();
-        newProyectile.InitializeAsEnemyProyectile(damage, movementSpeed, forward);
+        newProyectile = Instantiate(proyectilePrefab, leftCannon.position, rotation, proyectileContainer).GetComponent<Proyectile>();
+        newProyectile.InitializeAsEnemyProyectile(damage, movementSpeed);
         newProyectile.SetScreenLimits(leftScreenLimit, rightScreenLimit, upperScreenLimit, lowerScreenLimit);
     }
 

@@ -9,6 +9,8 @@ public class Proyectile : MonoBehaviour
 
     float speedMultiplier = 1.5f;
     float powerPlusSizeMultiplier = 2f;
+    float rotationAngleRange = 5f;
+    float movementSpeed;
     float height;
     float leftScreenLimit;
     float rightScreenLimit;
@@ -24,18 +26,13 @@ public class Proyectile : MonoBehaviour
 
     void Start()
     {
-        if (powerPlusOn)
-        {
-            Vector3 scale = transform.localScale;
-            scale.x *= powerPlusSizeMultiplier;
-            scale.y *= powerPlusSizeMultiplier;
-            transform.localScale = scale;
-
-            BoxCollider2D collider = GetComponent<BoxCollider2D>();
-            collider.size *= powerPlusSizeMultiplier;
-        }
-
         height = transform.GetComponent<SpriteRenderer>().bounds.size.y / 2f;
+
+        SetRotation();
+        movement = -transform.up * movementSpeed * speedMultiplier;
+
+        if (powerPlusOn)
+            ApplyPowerPlus();
     }                      
 
     void OnTriggerEnter2D(Collider2D collision)
@@ -65,6 +62,26 @@ public class Proyectile : MonoBehaviour
         LevelManager.onNextLevelSetting -= Destroy;
     }
 
+    void SetRotation()
+    {
+        float addedRotationZ = Random.Range(-(rotationAngleRange / 2f), rotationAngleRange / 2f);
+        Vector3 addedRotationEuler = new Vector3(0f, 0f, addedRotationZ);
+        Quaternion addedRotation = Quaternion.Euler(addedRotationEuler);
+
+        transform.rotation *= addedRotation;
+    }
+
+    void ApplyPowerPlus()
+    {
+        Vector3 scale = transform.localScale;
+        scale.x *= powerPlusSizeMultiplier;
+        scale.y *= powerPlusSizeMultiplier;
+        transform.localScale = scale;
+
+        BoxCollider2D collider = GetComponent<BoxCollider2D>();
+        collider.size *= powerPlusSizeMultiplier;
+    }
+
     bool OffScreen()
     {
         float x = transform.position.x;
@@ -80,20 +97,20 @@ public class Proyectile : MonoBehaviour
         Destroy(gameObject);
     }
 
-    public void InitializeAsPlayerProyectile(bool powerPlusOn, int damage, float movementSpeed, Vector3 forward)
+    public void InitializeAsPlayerProyectile(bool powerPlusOn, int damage, float movementSpeed)
     {
         playerProyectile = true;
         this.powerPlusOn = powerPlusOn;
         this.damage = damage;
-        movement = forward * movementSpeed * speedMultiplier;
+        this.movementSpeed = movementSpeed;
     }
 
-    public void InitializeAsEnemyProyectile(int damage, float movementSpeed, Vector3 forward)
+    public void InitializeAsEnemyProyectile(int damage, float movementSpeed)
     {
         playerProyectile = false;
         powerPlusOn = false;
         this.damage = damage;
-        movement = forward * movementSpeed * speedMultiplier;
+        this.movementSpeed = movementSpeed;
     }
 
     public void SetScreenLimits(float left, float right, float top, float bottom)
