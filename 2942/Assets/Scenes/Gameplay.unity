@@ -250,7 +250,9 @@ MonoBehaviour:
     type: 3}
   mantisPrefab: {fileID: 951139688195685958, guid: 55c6f3303c7812c419cc48fe0d3ad3f2,
     type: 3}
+  explosionPrefab: {fileID: 100004, guid: 82019e923dca94848916b96b8f98a352, type: 3}
   proyectileContainer: {fileID: 49080075}
+  explosionContainer: {fileID: 1426542509}
 --- !u!1 &224971308
 GameObject:
   m_ObjectHideFlags: 0
@@ -1900,6 +1902,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stats: {fileID: 11400000, guid: 17f6010615b4063408a7a2a5a52a9144, type: 2}
+  controller: {fileID: 1019439285}
   score: 0
   energy: 0
   damage: 0
@@ -1993,7 +1996,7 @@ Transform:
   - {fileID: 478020709}
   - {fileID: 1344438527}
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &1019439288
 BoxCollider2D:
@@ -2054,8 +2057,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d465ee382e10ac247bf7c3a176081c50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageColorChangeDuration: 0.5
+  damageColorDuration: 0.5
   damageColor: {r: 1, g: 0.29411766, b: 0.29411766, a: 1}
+  explosionPrefab: {fileID: 100004, guid: 82019e923dca94848916b96b8f98a352, type: 3}
+  explosionContainer: {fileID: 0}
 --- !u!1 &1059619348
 GameObject:
   m_ObjectHideFlags: 0
@@ -3104,6 +3109,36 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1420773046}
   m_CullTransparentMesh: 0
+--- !u!1 &1426542508
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1426542509}
+  m_Layer: 0
+  m_Name: Explosion Container
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1426542509
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1426542508}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 9
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1474481655
 GameObject:
   m_ObjectHideFlags: 0
@@ -4149,7 +4184,7 @@ RectTransform:
   - {fileID: 615598495}
   - {fileID: 1981355368}
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -4220,7 +4255,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 11
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1762363748
 GameObject:

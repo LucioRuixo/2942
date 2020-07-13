@@ -3,6 +3,7 @@
 public class EnemyController : MonoBehaviour
 {
     public EnemyModel model;
+    public EnemyView view;
 
     enum States
     {
@@ -183,5 +184,12 @@ public class EnemyController : MonoBehaviour
     public void SetProyectileContainer(Transform proyectileContainer)
     {
         this.proyectileContainer = proyectileContainer;
+    }
+
+    public void Destroy()
+    {
+        view.Explode();
+
+        Destroy(gameObject);
     }
 }

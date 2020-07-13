@@ -74,6 +74,7 @@ GameObject:
   - component: {fileID: 1139982154929173130}
   - component: {fileID: 6822796836388832259}
   - component: {fileID: 7406035982937056032}
+  - component: {fileID: -3425957951062768463}
   m_Layer: 2
   m_Name: Locust
   m_TagString: Enemy
@@ -225,9 +226,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   model: {fileID: 6822796836388832259}
+  view: {fileID: -3425957951062768463}
   forward: {x: 0, y: 0, z: 0}
   proyectilePrefab: {fileID: 2382705149313891595, guid: 4aaa1bc2725a44341854f2ca0f2060ba,
     type: 3}
   rightCannon: {fileID: 5333573793192482581}
   leftCannon: {fileID: 7129254437046697791}
-  bulletContainer: {fileID: 0}
+--- !u!114 &-3425957951062768463
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8662011388103476869}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56301a6c0af0c1c42b93337b356bc71a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

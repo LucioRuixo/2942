@@ -5,9 +5,11 @@ public class PlayerView : MonoBehaviour
 {
     bool damageColorOn;
 
-    public float damageColorChangeDuration;
+    public float damageColorDuration;
 
     public Color damageColor;
+    public GameObject explosionPrefab;
+    public Transform explosionContainer;
     SpriteRenderer spriteRenderer;
 
     void Start()
@@ -21,11 +23,16 @@ public class PlayerView : MonoBehaviour
             StartCoroutine(ChangeColorOnDamage());
     }
 
+    public void Explode()
+    {
+        Instantiate(explosionPrefab, transform.position, Quaternion.identity, explosionContainer);
+    }
+
     IEnumerator ChangeColorOnDamage()
     {
         spriteRenderer.color = damageColor;
 
-        yield return new WaitForSeconds(damageColorChangeDuration);
+        yield return new WaitForSeconds(damageColorDuration);
 
         spriteRenderer.color = Color.white;
     }

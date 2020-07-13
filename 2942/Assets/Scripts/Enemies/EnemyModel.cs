@@ -46,7 +46,7 @@ public class EnemyModel : MonoBehaviour
 
             CheckIfShouldGenerateItem();
 
-            Destroy(gameObject);
+            controller.Destroy();
         }
     }
 }

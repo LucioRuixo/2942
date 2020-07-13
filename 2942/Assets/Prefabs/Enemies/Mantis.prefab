@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 1672362063346893145}
   - component: {fileID: -6885261021819424635}
   - component: {fileID: 8342374494981410135}
+  - component: {fileID: 7311227798225003797}
   m_Layer: 2
   m_Name: Mantis
   m_TagString: Enemy
@@ -147,6 +148,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stats: {fileID: 11400000, guid: 374b6d0e640e6fe4381e46077b320a22, type: 2}
+  controller: {fileID: 8342374494981410135}
+  energy: 0
+  damage: 0
+  movementSpeed: 0
+  shootingInterval: 0
 --- !u!114 &8342374494981410135
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -160,11 +166,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   model: {fileID: -6885261021819424635}
+  view: {fileID: 7311227798225003797}
   forward: {x: 0, y: 0, z: 0}
   proyectilePrefab: {fileID: 3267962486452629335, guid: 3abbb951633b07c4e8946d1e7fa09b23,
     type: 3}
   rightCannon: {fileID: 4793475340087336490}
   leftCannon: {fileID: 2975907484398799277}
+--- !u!114 &7311227798225003797
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 951139688195685958}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56301a6c0af0c1c42b93337b356bc71a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3689844656006083751
 GameObject:
   m_ObjectHideFlags: 0

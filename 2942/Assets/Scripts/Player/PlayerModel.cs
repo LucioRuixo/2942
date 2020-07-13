@@ -4,6 +4,7 @@ using UnityEngine;
 public class PlayerModel : MonoBehaviour
 {
     public ShipSO stats;
+    public PlayerController controller;
 
     public int score;
 
@@ -75,7 +76,7 @@ public class PlayerModel : MonoBehaviour
             if (onDeath != null)
                 onDeath(false, score);
 
-            Destroy(gameObject);
+            controller.Destroy();
         }
     }
 

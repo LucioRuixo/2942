@@ -176,6 +176,13 @@ public class PlayerController : MonoBehaviour
         StartCoroutine(PowerPlusTimer(powerPlusDuration));
     }
 
+    public void Destroy()
+    {
+        view.Explode();
+
+        Destroy(gameObject);
+    }
+
     IEnumerator PowerPlusTimer(float duration)
     {
         yield return new WaitForSeconds(duration);
