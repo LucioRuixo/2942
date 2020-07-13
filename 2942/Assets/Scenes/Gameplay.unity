@@ -250,6 +250,7 @@ MonoBehaviour:
     type: 3}
   mantisPrefab: {fileID: 951139688195685958, guid: 55c6f3303c7812c419cc48fe0d3ad3f2,
     type: 3}
+  proyectileContainer: {fileID: 49080075}
 --- !u!1 &224971308
 GameObject:
   m_ObjectHideFlags: 0
@@ -1878,6 +1879,7 @@ GameObject:
   - component: {fileID: 1019439289}
   - component: {fileID: 1019439284}
   - component: {fileID: 1019439285}
+  - component: {fileID: 1019439290}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -1916,6 +1918,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   model: {fileID: 1019439284}
+  view: {fileID: 1019439290}
   bombCooldown: 10
   powerPlusDuration: 5
   forward: {x: 0, y: 0, z: 0}
@@ -1925,7 +1928,7 @@ MonoBehaviour:
     type: 3}
   rightCannon: {fileID: 478020709}
   leftCannon: {fileID: 1344438527}
-  proyectileContainer: {fileID: 0}
+  proyectileContainer: {fileID: 49080075}
 --- !u!212 &1019439286
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2039,6 +2042,20 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &1019439290
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1019439283}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d465ee382e10ac247bf7c3a176081c50, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damageColorChangeDuration: 0.5
+  damageColor: {r: 1, g: 0.29411766, b: 0.29411766, a: 1}
 --- !u!1 &1059619348
 GameObject:
   m_ObjectHideFlags: 0

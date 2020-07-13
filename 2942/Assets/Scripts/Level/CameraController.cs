@@ -15,7 +15,7 @@ public class CameraController : MonoBehaviour
 
     void OnEnable()
     {
-        PlayerModel.onDamageTaken += CallCameraShake;
+        PlayerController.onCollisionWithProyectile += CheckIfShaking;
     }
 
     void Start()
@@ -26,10 +26,10 @@ public class CameraController : MonoBehaviour
 
     void OnDisable()
     {
-        PlayerModel.onDamageTaken -= CallCameraShake;
+        PlayerController.onCollisionWithProyectile -= CheckIfShaking;
     }
 
-    void CallCameraShake()
+    void CheckIfShaking()
     {
         if (!shaking)
             StartCoroutine(Shake());

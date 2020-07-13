@@ -17,6 +17,8 @@ public class Proyectile : MonoBehaviour
     float lowerScreenLimit;
     float upperScreenLimit;
 
+    string shooterTag;
+
     Vector3 movement;
 
     void OnEnable()
@@ -37,16 +39,10 @@ public class Proyectile : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if (playerProyectile && collision.gameObject.tag == "Enemy")
-        {
-            collision.gameObject.GetComponent<EnemyModel>().TakeDamage(damage);
+        if ((collision.tag == "Enemy" && shooterTag == "Player")
+            ||
+            (collision.tag == "Player" && shooterTag == "Enemy"))
             Destroy(gameObject);
-        }
-        else if (!playerProyectile && collision.gameObject.tag == "Player")
-        {
-            collision.gameObject.GetComponent<PlayerModel>().TakeDamage(damage);
-            Destroy(gameObject);
-        }
     }
 
     void Update()
@@ -103,6 +99,7 @@ public class Proyectile : MonoBehaviour
         this.powerPlusOn = powerPlusOn;
         this.damage = damage;
         this.movementSpeed = movementSpeed;
+        shooterTag = "Player";
     }
 
     public void InitializeAsEnemyProyectile(int damage, float movementSpeed)
@@ -111,6 +108,7 @@ public class Proyectile : MonoBehaviour
         powerPlusOn = false;
         this.damage = damage;
         this.movementSpeed = movementSpeed;
+        shooterTag = "Enemy";
     }
 
     public void SetScreenLimits(float left, float right, float top, float bottom)
@@ -119,5 +117,10 @@ public class Proyectile : MonoBehaviour
         rightScreenLimit = right;
         upperScreenLimit = top;
         lowerScreenLimit = bottom;
+    }
+
+    public int GetDamage()
+    {
+        return damage;
     }
 }

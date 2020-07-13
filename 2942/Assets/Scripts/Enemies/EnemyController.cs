@@ -50,8 +50,15 @@ public class EnemyController : MonoBehaviour
         movement = forward * movementSpeed;
 
         state = States.NotShooting;
+    }
 
-        proyectileContainer = GameObject.Find("Proyectile Container").transform;
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.tag == "Player Proyectile")
+        {
+            int damageTaken = collision.gameObject.GetComponent<Proyectile>().GetDamage();
+            model.TakeDamage(damageTaken);
+        }
     }
 
     void Update()
@@ -171,5 +178,10 @@ public class EnemyController : MonoBehaviour
         rightScreenLimit = right;
         upperScreenLimit = top;
         lowerScreenLimit = bottom;
+    }
+
+    public void SetProyectileContainer(Transform proyectileContainer)
+    {
+        this.proyectileContainer = proyectileContainer;
     }
 }

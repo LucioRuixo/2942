@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     public PlayerModel model;
+    public PlayerView view;
 
     bool canPlaceBomb = false;
     bool powerPlusOn = false;
@@ -31,6 +32,7 @@ public class PlayerController : MonoBehaviour
     public Transform leftCannon;
     public Transform proyectileContainer;
 
+    public static event Action onCollisionWithProyectile;
     public static event Action<bool> onBombStateUpdate;
     public static event Action onLevelEndReached;
 
@@ -58,7 +60,16 @@ public class PlayerController : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.tag == "Level End" && onLevelEndReached != null)
+        if (collision.tag == "Enemy Proyectile")
+        {
+            int damageTaken = collision.gameObject.GetComponent<Proyectile>().GetDamage();
+            model.TakeDamage(damageTaken);
+            view.CheckIfDamageColorOn();
+
+            if (onCollisionWithProyectile != null)
+                onCollisionWithProyectile();
+        }
+        else if (collision.tag == "Level End" && onLevelEndReached != null)
             onLevelEndReached();
     }
 

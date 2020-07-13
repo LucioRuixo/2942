@@ -16,7 +16,6 @@ public class PlayerModel : MonoBehaviour
 
     public static event Action<int> onEnergyUpdate;
     public static event Action<int> onScoreUpdate;
-    public static event Action onDamageTaken;
     public static event Action<bool, int> onDeath;
     public static event Action<bool, int> onVictory;
 
@@ -70,9 +69,6 @@ public class PlayerModel : MonoBehaviour
 
         if (onEnergyUpdate != null)
             onEnergyUpdate(energy);
-
-        if (onDamageTaken != null)
-            onDamageTaken();
 
         if (energy == 0)
         {

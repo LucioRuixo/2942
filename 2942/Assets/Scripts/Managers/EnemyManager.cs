@@ -29,6 +29,7 @@ public class EnemyManager : MonoBehaviour
 
     public GameObject locustPrefab;
     public GameObject mantisPrefab;
+    public Transform proyectileContainer;
 
     void OnEnable()
     {
@@ -103,6 +104,7 @@ public class EnemyManager : MonoBehaviour
 
             EnemyController newLocust = Instantiate(locustPrefab, position, rotation, transform).GetComponent<EnemyController>();
             newLocust.SetScreenLimits(leftScreenLimit, rightScreenLimit, upperScreenLimit, lowerScreenLimit);
+            newLocust.SetProyectileContainer(proyectileContainer);
             enemies.Add(newLocust);
 
             float waitTime = Random.Range(locust.minWaitTime, locust.maxWaitTime);
@@ -126,6 +128,7 @@ public class EnemyManager : MonoBehaviour
 
             EnemyController newMantis = Instantiate(mantisPrefab, position, rotation, transform).GetComponent<EnemyController>();
             newMantis.SetScreenLimits(leftScreenLimit, rightScreenLimit, upperScreenLimit, lowerScreenLimit);
+            newMantis.SetProyectileContainer(proyectileContainer);
             enemies.Add(newMantis);
 
             float waitTime = Random.Range(mantis.minWaitTime, mantis.maxWaitTime);

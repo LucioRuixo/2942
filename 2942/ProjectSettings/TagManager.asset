@@ -5,9 +5,10 @@ TagManager:
   serializedVersion: 2
   tags:
   - Enemy
+  - Level End
   - Player Proyectile
   - Enemy Proyectile
-  - Level End
+  - Proyectile
   layers:
   - Default
   - TransparentFX
