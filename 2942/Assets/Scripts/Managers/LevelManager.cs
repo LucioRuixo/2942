@@ -9,7 +9,7 @@ public class LevelManager : MonoBehaviour
     public List<GameObject> levels;
 
     public static event Action onLevelEndReached;
-    public static event Action onNextLevelSetting;
+    public static event Action onNewLevelSetting;
     public static event Action onLastLevelCompleted;
 
     void OnEnable()
@@ -17,6 +17,12 @@ public class LevelManager : MonoBehaviour
         UIManager_Gameplay.onNextLevelButtonPressed += SetNextLevel;
 
         PlayerController.onLevelEndReached += CheckIfPlayerWon;
+    }
+
+    void Start()
+    {
+        if (onNewLevelSetting != null)
+            onNewLevelSetting();
     }
 
     void OnDisable()
@@ -46,7 +52,7 @@ public class LevelManager : MonoBehaviour
         levels[currentLevel].SetActive(true);
         currentLevel++;
 
-        if (onNextLevelSetting != null)
-            onNextLevelSetting();
+        if (onNewLevelSetting != null)
+            onNewLevelSetting();
     }
 }

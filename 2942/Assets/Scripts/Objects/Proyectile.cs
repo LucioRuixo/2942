@@ -23,7 +23,7 @@ public class Proyectile : MonoBehaviour
 
     void OnEnable()
     {
-        LevelManager.onNextLevelSetting += Destroy;
+        LevelManager.onNewLevelSetting += Destroy;
     }
 
     void Start()
@@ -55,7 +55,7 @@ public class Proyectile : MonoBehaviour
 
     void OnDisable()
     {
-        LevelManager.onNextLevelSetting -= Destroy;
+        LevelManager.onNewLevelSetting -= Destroy;
     }
 
     void SetRotation()

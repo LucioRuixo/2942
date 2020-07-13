@@ -7,17 +7,11 @@ public class PlayerController : MonoBehaviour
     public PlayerModel model;
     public PlayerView view;
 
-    bool canPlaceBomb = false;
+    bool canPlaceBomb = true;
     bool powerPlusOn = false;
 
-    int damage;
-
-    public float bombCooldown;
-    public float powerPlusDuration;
     float width;
     float height;
-    float movementSpeed;
-    float bombTimer = 0f;
     float leftScreenLimit;
     float rightScreenLimit;
     float lowerScreenLimit;
@@ -46,11 +40,8 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
-        damage = model.damage;
-
         width = transform.GetComponent<SpriteRenderer>().bounds.size.x / 2f;
         height = transform.GetComponent<SpriteRenderer>().bounds.size.y / 2f;
-        movementSpeed = model.movementSpeed;
 
         forward = transform.up;
 
@@ -76,19 +67,6 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         ProcessInput();
-
-        if (!canPlaceBomb)
-        {
-            bombTimer += Time.deltaTime;
-
-            if (bombTimer >= bombCooldown)
-            {
-                canPlaceBomb = true;
-
-                if (onBombStateUpdate != null)
-                    onBombStateUpdate(canPlaceBomb);
-            }
-        }
     }
 
     void OnDisable()
@@ -145,20 +123,20 @@ public class PlayerController : MonoBehaviour
         Proyectile newProyectile;
 
         newProyectile = Instantiate(proyectilePrefab, rightCannon.position, rotation, proyectileContainer).GetComponent<Proyectile>();
-        newProyectile.InitializeAsPlayerProyectile(powerPlusOn, damage, movementSpeed);
+        newProyectile.InitializeAsPlayerProyectile(powerPlusOn, model.damage, model.movementSpeed);
         newProyectile.SetScreenLimits(leftScreenLimit, rightScreenLimit, upperScreenLimit, lowerScreenLimit);
 
         newProyectile = Instantiate(proyectilePrefab, leftCannon.position, rotation, proyectileContainer).GetComponent<Proyectile>();
-        newProyectile.InitializeAsPlayerProyectile(powerPlusOn, damage, movementSpeed);
+        newProyectile.InitializeAsPlayerProyectile(powerPlusOn, model.damage, model.movementSpeed);
         newProyectile.SetScreenLimits(leftScreenLimit, rightScreenLimit, upperScreenLimit, lowerScreenLimit);
     }
 
     void PlaceBomb()
     {
-        Instantiate(bombPrefab, transform.position, Quaternion.identity);
+        Bomb newBomb = Instantiate(bombPrefab, transform.position, Quaternion.identity).GetComponent<Bomb>();
+        newBomb.Initialize(model.bombDetonationTime, model.bombDamage);
 
         canPlaceBomb = false;
-        bombTimer = 0f;
 
         if (onBombStateUpdate != null)
             onBombStateUpdate(canPlaceBomb);
@@ -173,7 +151,7 @@ public class PlayerController : MonoBehaviour
     {
         powerPlusOn = true;
 
-        StartCoroutine(PowerPlusTimer(powerPlusDuration));
+        StartCoroutine(PowerPlusTimer());
     }
 
     public void Destroy()
@@ -183,9 +161,16 @@ public class PlayerController : MonoBehaviour
         Destroy(gameObject);
     }
 
-    IEnumerator PowerPlusTimer(float duration)
+    IEnumerator BombCooldown()
     {
-        yield return new WaitForSeconds(duration);
+        yield return new WaitForSeconds(model.bombCooldownTime);
+
+        canPlaceBomb = true;
+    }
+
+    IEnumerator PowerPlusTimer()
+    {
+        yield return new WaitForSeconds(model.powerPlusDuration);
 
         powerPlusOn = false;
     }

@@ -6,9 +6,9 @@ public class EnemyModel : MonoBehaviour
     public ShipSO stats;
     public EnemyController controller;
 
-    int itemGenerationPercentage = 10;
+    int itemGenerationPercentage;
 
-    [Header("From scriptable object: ")]
+    [Header("From scriptable object")]
     public int energy;
     public int damage;
 
@@ -17,6 +17,11 @@ public class EnemyModel : MonoBehaviour
 
     public static event Action onDeath;
     public static event Action<float, float> onItemGeneration;
+
+    void OnEnable()
+    {
+        Bomb.onBombExplosion += TakeDamage;
+    }
 
     void Start()
     {
@@ -27,12 +32,22 @@ public class EnemyModel : MonoBehaviour
         shootingInterval = stats.shootingInterval;
     }
 
+    void OnDisable()
+    {
+        Bomb.onBombExplosion -= TakeDamage;
+    }
+
     void CheckIfShouldGenerateItem()
     {
         int random = UnityEngine.Random.Range(0, 100);
 
         if (random < itemGenerationPercentage && onItemGeneration != null)
             onItemGeneration(transform.position.x, transform.position.y);
+    }
+
+    public void SetItemGenerationPercentage(int itemGenerationPercentage)
+    {
+        this.itemGenerationPercentage = itemGenerationPercentage;
     }
 
     public void TakeDamage(int damage)

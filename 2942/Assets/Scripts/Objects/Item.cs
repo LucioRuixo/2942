@@ -22,8 +22,7 @@ public class Item : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.tag != "Player")
-            return;
+        if (collision.tag != "Player") return;
 
         switch (type)
         {

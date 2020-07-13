@@ -34,11 +34,6 @@ public class EnemyController : MonoBehaviour
     public Transform leftCannon;
     Transform proyectileContainer;
 
-    void OnEnable()
-    {
-        Bomb.onBombExplosion += Explode;
-    }
-
     void Start()
     {
         damage = model.damage;
@@ -75,11 +70,6 @@ public class EnemyController : MonoBehaviour
         }
         else if (OffScreen())
             Destroy(gameObject);
-    }
-
-    void OnDisable()
-    {
-        Bomb.onBombExplosion -= Explode;
     }
 
     void ProcessStates()

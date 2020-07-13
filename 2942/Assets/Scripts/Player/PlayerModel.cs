@@ -6,9 +6,16 @@ public class PlayerModel : MonoBehaviour
     public ShipSO stats;
     public PlayerController controller;
 
-    public int score;
+    [HideInInspector] public int score;
 
-    [Header("From scriptable object: ")]
+    [Header("Variable attributes")]
+    public int bombDamage;
+
+    public float bombDetonationTime;
+    public float bombCooldownTime;
+    public float powerPlusDuration;
+
+    [Header("From scriptable object")]
     public int energy;
     public int damage;
 
