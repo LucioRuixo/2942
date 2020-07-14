@@ -5,11 +5,12 @@ public class PlayerView : MonoBehaviour
 {
     bool damageColorOn;
 
+    public Color damageColor;
     public float damageColorDuration;
 
-    public Color damageColor;
     public GameObject explosionPrefab;
     public Transform explosionContainer;
+
     SpriteRenderer spriteRenderer;
 
     void Start()

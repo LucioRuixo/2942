@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b67803880928f9b49a93f40e9ad636f6, type: 3}
-  m_Name: Mantis
+  m_Name: Locust
   m_EditorClassIdentifier: 
   energy: 50
-  damage: 5
-  movementSpeed: 12.5
-  shootingInterval: 0.2
+  damage: 10
+  movementSpeed: 7.5
+  shootingInterval: 0.25

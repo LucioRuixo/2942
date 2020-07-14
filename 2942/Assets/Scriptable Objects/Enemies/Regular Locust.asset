@@ -9,10 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b67803880928f9b49a93f40e9ad636f6, type: 3}
-  m_Name: Locust
+  m_Script: {fileID: 11500000, guid: f999f7205e7968c4ea5ef93917f7c96a, type: 3}
+  m_Name: Regular Locust
   m_EditorClassIdentifier: 
-  energy: 25
-  damage: 10
-  movementSpeed: 7.5
-  shootingInterval: 0.25
+  itemGenerationPercentage: 5
+  minWaitTime: 0.5
+  maxWaitTime: 0.75
+  type: 0
+  prefab: {fileID: 8662011388103476869, guid: 6550bf2702c873647b4842cff4ab7ce0, type: 3}

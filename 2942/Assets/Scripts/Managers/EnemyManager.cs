@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class EnemyManager : MonoBehaviour
 {
-    enum EnemyTypes
+    public enum EnemyTypes
     {
         Locust,
         Mantis
@@ -12,10 +12,12 @@ public class EnemyManager : MonoBehaviour
 
     struct Enemy
     {
+        public int itemGenerationPercentage;
+
         public float minWaitTime;
         public float maxWaitTime;
-        public float width;
         public float height;
+        public float width;
 
         public EnemyTypes type;
 
@@ -24,14 +26,10 @@ public class EnemyManager : MonoBehaviour
 
     bool active;
 
-    float locustInitialYValue;
     float leftScreenLimit;
     float rightScreenLimit;
     float upperScreenLimit;
     float lowerScreenLimit;
-
-    Enemy locust;
-    Enemy mantis;
 
     public GameObject locustPrefab;
     public GameObject mantisPrefab;
@@ -39,16 +37,17 @@ public class EnemyManager : MonoBehaviour
     public Transform proyectileContainer;
     public Transform explosionContainer;
 
-    List<EnemyController> enemies;
+    public List<EnemySO> enemySOs;
+    List<Enemy> enemies;
+    List<EnemyController> currentEnemies;
 
-    [Header("Enemy attributes")]
-    public int itemGenerationPercentage;
+    [Header("General enemy attributes")]
+    public int collisionDamage;
 
     public float initialWaitTime;
-    public float minLocustWaitTime;
-    public float maxLocustWaitTime;
-    public float minMantisWaitTime;
-    public float maxMantisWaitTime;
+
+    public Color damageColor;
+    public float damageColorDuration;
 
     void OnEnable()
     {
@@ -61,13 +60,13 @@ public class EnemyManager : MonoBehaviour
 
     void Start()
     {
-        enemies = new List<EnemyController>();
+        enemies = new List<Enemy>();
+        currentEnemies = new List<EnemyController>();
 
-        InitializeLocust();
-        InitializeMantis();
-
-        StartCoroutine(Generate(locust));
-        StartCoroutine(Generate(mantis));
+        for (int i = 0; i < enemySOs.Count; i++)
+        {
+            enemies.Add(Initialize(enemySOs[i]));
+        }
     }
 
     void OnDisable()
@@ -87,62 +86,54 @@ public class EnemyManager : MonoBehaviour
         lowerScreenLimit = bottom;
     }
 
-    void InitializeLocust()
+    Enemy Initialize(EnemySO enemySOs)
     {
-        locust.minWaitTime = minLocustWaitTime;
-        locust.maxWaitTime = maxLocustWaitTime;
-        locust.width = locustPrefab.transform.GetComponent<SpriteRenderer>().size.x / 2f;
-        locust.height = locustPrefab.transform.GetComponent<SpriteRenderer>().size.y / 2f;
-        locustInitialYValue = upperScreenLimit + locust.height;
+        Enemy newEnemy;
 
-        locust.type = EnemyTypes.Locust;
+        newEnemy.itemGenerationPercentage = enemySOs.itemGenerationPercentage;
+        newEnemy.minWaitTime = enemySOs.minWaitTime;
+        newEnemy.maxWaitTime = enemySOs.maxWaitTime;
+        newEnemy.type = enemySOs.type;
+        newEnemy.prefab = enemySOs.prefab;
 
-        locust.prefab = locustPrefab;
+        newEnemy.height = newEnemy.prefab.GetComponent<SpriteRenderer>().size.y / 2f;
+        newEnemy.width = newEnemy.prefab.GetComponent<SpriteRenderer>().size.x / 2f;
+
+        return newEnemy;
     }
 
-    void InitializeMantis()
-    {
-        mantis.minWaitTime = minMantisWaitTime;
-        mantis.maxWaitTime = maxMantisWaitTime;
-        mantis.width = mantisPrefab.transform.GetComponent<SpriteRenderer>().size.x / 2f;
-        mantis.height = mantisPrefab.transform.GetComponent<SpriteRenderer>().size.y / 2f;
-
-        mantis.type = EnemyTypes.Mantis;
-
-        mantis.prefab = mantisPrefab;
-    }
-
-    Vector3 SetNewEnemyPosition(EnemyTypes type)
+    Vector2 SetNewEnemyPosition(Enemy enemy)
     {
         float positionXValue;
-        Vector3 position;
+        Vector2 position;
 
-        switch (type)
+        switch (enemy.type)
         {
             case EnemyTypes.Locust:
-                positionXValue = UnityEngine.Random.Range(rightScreenLimit + locust.width, leftScreenLimit - locust.width);
-                position = new Vector3(positionXValue, locustInitialYValue);
+                positionXValue = Random.Range(rightScreenLimit + enemy.width, leftScreenLimit - enemy.width);
+                float initialYValue = upperScreenLimit + enemy.height;
+                position = new Vector2(positionXValue, initialYValue);
                 break;
             case EnemyTypes.Mantis:
-                bool rightSide = UnityEngine.Random.Range(0, 1) % 2 == 0 ? true : false;
-                positionXValue = rightSide ? leftScreenLimit - mantis.height : rightScreenLimit + mantis.height;
-                float positionYValue = UnityEngine.Random.Range(lowerScreenLimit + mantis.width, upperScreenLimit - mantis.width);
-                position = new Vector3(positionXValue, positionYValue);
+                bool rightSide = Random.Range(0, 2) % 2 == 0 ? true : false;
+                positionXValue = rightSide ? leftScreenLimit - enemy.height : rightScreenLimit + enemy.height;
+                float positionYValue = Random.Range(lowerScreenLimit + enemy.width, upperScreenLimit - enemy.width);
+                position = new Vector2(positionXValue, positionYValue);
                 break;
             default:
-                position = Vector3.zero;
+                position = Vector2.zero;
                 break;
         }
 
         return position;
     }
 
-    Quaternion SetNewEnemyRotation(EnemyTypes type)
+    Quaternion SetNewEnemyRotation(Enemy enemy, Vector3 position)
     {
         Vector3 rotationEuler;
         Quaternion rotation;
 
-        switch (type)
+        switch (enemy.type)
         {
             case EnemyTypes.Locust:
                 rotationEuler = new Vector3(0f, 0f, 180f);
@@ -150,7 +141,7 @@ public class EnemyManager : MonoBehaviour
                 break;
             case EnemyTypes.Mantis:
                 rotationEuler = Vector3.zero;
-                bool rightSide = UnityEngine.Random.Range(0, 1) % 2 == 0 ? true : false;
+                bool rightSide = position.x > 0f ? true : false;
                 rotationEuler.z = rightSide ? 90f : -90f;
                 rotation = Quaternion.Euler(rotationEuler);
                 break;
@@ -164,7 +155,7 @@ public class EnemyManager : MonoBehaviour
 
     void SetOnNewLevel()
     {
-        if (enemies.Count > 0)
+        if (currentEnemies.Count > 0)
             Clear();
 
         StartCoroutine(WaitToGenerate());
@@ -177,12 +168,12 @@ public class EnemyManager : MonoBehaviour
 
     void Clear()
     {
-        foreach (EnemyController enemy in enemies)
+        foreach (EnemyController enemy in currentEnemies)
         {
             if (enemy) Destroy(enemy.gameObject);
         }
 
-        enemies.Clear();
+        currentEnemies.Clear();
     }
 
     IEnumerator WaitToGenerate()
@@ -190,32 +181,35 @@ public class EnemyManager : MonoBehaviour
         yield return new WaitForSeconds(initialWaitTime);
 
         active = true;
-        StartCoroutine(Generate(locust));
-        StartCoroutine(Generate(mantis));
+        for (int i = 0; i < enemies.Count; i++)
+        {
+            StartCoroutine(Generate(enemies[i]));
+        }
     }
 
     IEnumerator Generate(Enemy enemy)
     {
         while (active)
         {
-            Vector3 position = SetNewEnemyPosition(enemy.type);
-            Quaternion rotation = SetNewEnemyRotation(enemy.type);
+            Vector2 position = SetNewEnemyPosition(enemy);
+            Quaternion rotation = SetNewEnemyRotation(enemy, position);
 
             EnemyController newController = Instantiate(enemy.prefab, position, rotation, transform).GetComponent<EnemyController>();
             if (newController)
             {
                 newController.SetScreenLimits(leftScreenLimit, rightScreenLimit, upperScreenLimit, lowerScreenLimit);
                 newController.SetProyectileContainer(proyectileContainer);
-                enemies.Add(newController);
+                currentEnemies.Add(newController);
 
                 EnemyModel newModel = newController.gameObject.GetComponent<EnemyModel>();
-                newModel.SetItemGenerationPercentage(itemGenerationPercentage);
+                newModel.Initialize(collisionDamage, enemy.itemGenerationPercentage);
 
                 EnemyView newView = newController.gameObject.GetComponent<EnemyView>();
-                newView.SetExplosion(explosionPrefab, explosionContainer);
+                newView.InitializeDamageColor(damageColor, damageColorDuration);
+                newView.InitializeExplosion(explosionPrefab, explosionContainer);
             }
 
-            float waitTime = UnityEngine.Random.Range(enemy.minWaitTime, enemy.maxWaitTime);
+            float waitTime = Random.Range(enemy.minWaitTime, enemy.maxWaitTime);
             yield return new WaitForSeconds(waitTime);
         }
     }

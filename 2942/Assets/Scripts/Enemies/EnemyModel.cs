@@ -6,6 +6,7 @@ public class EnemyModel : MonoBehaviour
     public ShipSO stats;
     public EnemyController controller;
 
+    int collisionDamage;
     int itemGenerationPercentage;
 
     [Header("From scriptable object")]
@@ -45,9 +46,15 @@ public class EnemyModel : MonoBehaviour
             onItemGeneration(transform.position.x, transform.position.y);
     }
 
-    public void SetItemGenerationPercentage(int itemGenerationPercentage)
+    public void Initialize(int collisionDamage, int itemGenerationPercentage)
     {
+        this.collisionDamage = collisionDamage;
         this.itemGenerationPercentage = itemGenerationPercentage;
+    }
+
+    public int GetCollisionDamage()
+    {
+        return collisionDamage;
     }
 
     public void TakeDamage(int damage)

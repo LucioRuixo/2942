@@ -54,6 +54,7 @@ public class EnemyController : MonoBehaviour
         {
             int damageTaken = collision.gameObject.GetComponent<Proyectile>().GetDamage();
             model.TakeDamage(damageTaken);
+            view.CheckIfDamageColorOn();
         }
     }
 

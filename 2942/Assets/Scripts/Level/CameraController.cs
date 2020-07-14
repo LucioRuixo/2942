@@ -15,7 +15,7 @@ public class CameraController : MonoBehaviour
 
     void OnEnable()
     {
-        PlayerController.onCollisionWithProyectile += CheckIfShaking;
+        PlayerController.onCollision += CheckIfShaking;
     }
 
     void Start()
@@ -26,7 +26,7 @@ public class CameraController : MonoBehaviour
 
     void OnDisable()
     {
-        PlayerController.onCollisionWithProyectile -= CheckIfShaking;
+        PlayerController.onCollision -= CheckIfShaking;
     }
 
     void CheckIfShaking()

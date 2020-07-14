@@ -9,15 +9,13 @@ public class Proyectile : MonoBehaviour
 
     float speedMultiplier = 1.5f;
     float powerPlusSizeMultiplier = 2f;
-    float rotationAngleRange = 5f;
+    float rotationAngleRange = 6f;
     float movementSpeed;
     float height;
     float leftScreenLimit;
     float rightScreenLimit;
     float lowerScreenLimit;
     float upperScreenLimit;
-
-    string shooterTag;
 
     Vector3 movement;
 
@@ -39,9 +37,9 @@ public class Proyectile : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if ((collision.tag == "Enemy" && shooterTag == "Player")
+        if ((collision.tag == "Enemy" && playerProyectile)
             ||
-            (collision.tag == "Player" && shooterTag == "Enemy"))
+            (collision.tag == "Player" && !playerProyectile))
             Destroy(gameObject);
     }
 
@@ -99,7 +97,6 @@ public class Proyectile : MonoBehaviour
         this.powerPlusOn = powerPlusOn;
         this.damage = damage;
         this.movementSpeed = movementSpeed;
-        shooterTag = "Player";
     }
 
     public void InitializeAsEnemyProyectile(int damage, float movementSpeed)
@@ -108,7 +105,6 @@ public class Proyectile : MonoBehaviour
         powerPlusOn = false;
         this.damage = damage;
         this.movementSpeed = movementSpeed;
-        shooterTag = "Enemy";
     }
 
     public void SetScreenLimits(float left, float right, float top, float bottom)

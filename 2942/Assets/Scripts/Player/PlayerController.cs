@@ -26,7 +26,7 @@ public class PlayerController : MonoBehaviour
     public Transform leftCannon;
     public Transform proyectileContainer;
 
-    public static event Action onCollisionWithProyectile;
+    public static event Action onCollision;
     public static event Action<bool> onBombStateUpdate;
     public static event Action onLevelEndReached;
 
@@ -51,14 +51,19 @@ public class PlayerController : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.tag == "Enemy Proyectile")
+        if (collision.tag == "Enemy Proyectile" || collision.tag == "Enemy")
         {
-            int damageTaken = collision.gameObject.GetComponent<Proyectile>().GetDamage();
+            int damageTaken;
+            if (collision.tag == "Enemy Proyectile")
+                damageTaken = collision.GetComponent<Proyectile>().GetDamage();
+            else
+                damageTaken = collision.GetComponent<EnemyModel>().GetCollisionDamage();
+
             model.TakeDamage(damageTaken);
             view.CheckIfDamageColorOn();
 
-            if (onCollisionWithProyectile != null)
-                onCollisionWithProyectile();
+            if (onCollision != null)
+                onCollision();
         }
         else if (collision.tag == "Level End" && onLevelEndReached != null)
             onLevelEndReached();
@@ -137,6 +142,7 @@ public class PlayerController : MonoBehaviour
         newBomb.Initialize(model.bombDetonationTime, model.bombDamage);
 
         canPlaceBomb = false;
+        StartCoroutine(BombCooldown());
 
         if (onBombStateUpdate != null)
             onBombStateUpdate(canPlaceBomb);

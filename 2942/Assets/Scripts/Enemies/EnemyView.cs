@@ -1,11 +1,35 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public class EnemyView : MonoBehaviour
 {
+    bool damageColorOn;
+
+    float damageColorDuration;
+
     GameObject explosionPrefab;
     Transform explosionContainer;
+    Color damageColor;
+    SpriteRenderer spriteRenderer;
 
-    public void SetExplosion(GameObject explosionPrefab, Transform explosionContainer)
+    void Start()
+    {
+        spriteRenderer = GetComponent<SpriteRenderer>();
+    }
+
+    public void CheckIfDamageColorOn()
+    {
+        if (!damageColorOn)
+            StartCoroutine(ChangeColorOnDamage());
+    }
+
+    public void InitializeDamageColor(Color damageColor, float damageColorDuration)
+    {
+        this.damageColor = damageColor;
+        this.damageColorDuration = damageColorDuration;
+    }
+
+    public void InitializeExplosion(GameObject explosionPrefab, Transform explosionContainer)
     {
         this.explosionPrefab = explosionPrefab;
         this.explosionContainer = explosionContainer;
@@ -14,5 +38,14 @@ public class EnemyView : MonoBehaviour
     public void Explode()
     {
         Instantiate(explosionPrefab, transform.position, Quaternion.identity, explosionContainer);
+    }
+
+    IEnumerator ChangeColorOnDamage()
+    {
+        spriteRenderer.color = damageColor;
+
+        yield return new WaitForSeconds(damageColorDuration);
+
+        spriteRenderer.color = Color.white;
     }
 }

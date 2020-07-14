@@ -249,12 +249,13 @@ MonoBehaviour:
   explosionPrefab: {fileID: 100004, guid: 82019e923dca94848916b96b8f98a352, type: 3}
   proyectileContainer: {fileID: 49080075}
   explosionContainer: {fileID: 1426542509}
-  itemGenerationPercentage: 10
+  enemySOs:
+  - {fileID: 11400000, guid: 1cd173329c5a82e46b94a19ed425f2c7, type: 2}
+  - {fileID: 11400000, guid: b56ee23202ffdc0419a18c09eb9ad09f, type: 2}
+  collisionDamage: 50
   initialWaitTime: 3
-  minLocustWaitTime: 0.1
-  maxLocustWaitTime: 1
-  minMantisWaitTime: 0.25
-  maxMantisWaitTime: 2
+  damageColor: {r: 1, g: 0.29411766, b: 0.29411766, a: 1}
+  damageColorDuration: 0.25
 --- !u!1 &224971308
 GameObject:
   m_ObjectHideFlags: 0
@@ -2061,8 +2062,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d465ee382e10ac247bf7c3a176081c50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageColorDuration: 0.5
   damageColor: {r: 1, g: 0.29411766, b: 0.29411766, a: 1}
+  damageColorDuration: 0.5
   explosionPrefab: {fileID: 100004, guid: 82019e923dca94848916b96b8f98a352, type: 3}
   explosionContainer: {fileID: 1426542509}
 --- !u!1 &1059619348
