@@ -42,6 +42,8 @@ public class GameManager : MonoBehaviour
         if (Input.GetButtonDown("Pause"))
         {
             ChangePauseState();
+
+            SoundManager.Get().PlaySound(SoundManager.Sounds.Button);
         }
     }
 

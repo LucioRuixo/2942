@@ -91,21 +91,22 @@ public class PlayerController : MonoBehaviour
 
     void ProcessInput()
     {
-        movement = Vector3.zero;
-
-        if (Input.GetButton("Horizontal"))
-            movement.x += Input.GetAxisRaw("Horizontal");
-
-        if (Input.GetButton("Vertical"))
-            movement.y += Input.GetAxisRaw("Vertical");
-
-        UpdatePosition(movement);
-
+        if (Input.GetButtonDown("Vertical") && Input.GetAxisRaw("Vertical") > 0f)
+            view.ToggleThrustParticleSystem(true);
         if (Input.GetButtonDown("Shoot"))
             Shoot();
-
         if (Input.GetButtonDown("Place Bomb") && canPlaceBomb)
             PlaceBomb();
+
+        movement = Vector3.zero;
+        if (Input.GetButton("Horizontal"))
+            movement.x += Input.GetAxisRaw("Horizontal");
+        if (Input.GetButton("Vertical"))
+            movement.y += Input.GetAxisRaw("Vertical");
+        UpdatePosition(movement);
+
+        if (Input.GetButtonUp("Vertical"))
+            view.ToggleThrustParticleSystem(false);
     }
 
     void UpdatePosition(Vector3 movement)
@@ -133,6 +134,8 @@ public class PlayerController : MonoBehaviour
         newProyectile = Instantiate(proyectilePrefab, leftCannon.position, rotation, proyectileContainer).GetComponent<Proyectile>();
         newProyectile.InitializeAsPlayerProyectile(powerPlusOn, model.damage, model.movementSpeed);
         newProyectile.SetScreenLimits(leftScreenLimit, rightScreenLimit, upperScreenLimit, lowerScreenLimit);
+
+        SoundManager.Get().PlaySound(SoundManager.Sounds.PlayerShot);
     }
 
     void PlaceBomb()

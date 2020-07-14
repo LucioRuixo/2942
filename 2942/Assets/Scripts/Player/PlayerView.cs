@@ -3,19 +3,28 @@ using UnityEngine;
 
 public class PlayerView : MonoBehaviour
 {
-    bool damageColorOn;
+    bool damageColorOn = false;
 
     public Color damageColor;
     public float damageColorDuration;
 
     public GameObject explosionPrefab;
     public Transform explosionContainer;
+    public ParticleSystem thrustParticleSystem;
 
     SpriteRenderer spriteRenderer;
 
     void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
+    }
+
+    public void ToggleThrustParticleSystem(bool state)
+    {
+        if (state)
+            thrustParticleSystem.Play();
+        else if (thrustParticleSystem.isPlaying)
+            thrustParticleSystem.Stop();
     }
 
     public void CheckIfDamageColorOn()

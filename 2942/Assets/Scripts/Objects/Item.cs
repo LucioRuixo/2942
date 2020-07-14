@@ -41,6 +41,8 @@ public class Item : MonoBehaviour
             }
         }
 
+        SoundManager.Get().PlaySound(SoundManager.Sounds.Item);
+
         Destroy(gameObject);
     }
 

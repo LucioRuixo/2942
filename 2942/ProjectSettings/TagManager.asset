@@ -9,6 +9,7 @@ TagManager:
   - Player Proyectile
   - Enemy Proyectile
   - Proyectile
+  - Explosion
   layers:
   - Default
   - TransparentFX
@@ -46,7 +47,10 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: Upgrades
+  - name: Backgroud
+    uniqueID: 2697858825
+    locked: 0
+  - name: Items
     uniqueID: 1862881549
     locked: 0
   - name: Bombs
@@ -57,6 +61,9 @@ TagManager:
     locked: 0
   - name: Enemies
     uniqueID: 4133177637
+    locked: 0
+  - name: Explosions
+    uniqueID: 758356353
     locked: 0
   - name: Player
     uniqueID: 227863821

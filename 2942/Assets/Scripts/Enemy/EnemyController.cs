@@ -50,9 +50,14 @@ public class EnemyController : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.tag == "Player Proyectile")
+        if (collision.tag == "Player Proyectile" || collision.tag == "Explosion")
         {
-            int damageTaken = collision.gameObject.GetComponent<Proyectile>().GetDamage();
+            int damageTaken;
+            if (collision.tag == "Player Proyectile")
+                damageTaken = collision.GetComponent<Proyectile>().GetDamage();
+            else
+                damageTaken = collision.GetComponent<Explosion>().GetDamage();
+
             model.TakeDamage(damageTaken);
             view.CheckIfDamageColorOn();
         }
@@ -146,6 +151,8 @@ public class EnemyController : MonoBehaviour
         newProyectile = Instantiate(proyectilePrefab, leftCannon.position, rotation, proyectileContainer).GetComponent<Proyectile>();
         newProyectile.InitializeAsEnemyProyectile(damage, movementSpeed);
         newProyectile.SetScreenLimits(leftScreenLimit, rightScreenLimit, upperScreenLimit, lowerScreenLimit);
+
+        SoundManager.Get().PlaySound(SoundManager.Sounds.EnemyShot);
     }
 
     bool OffScreen()

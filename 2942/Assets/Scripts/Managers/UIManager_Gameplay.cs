@@ -80,11 +80,15 @@ public class UIManager_Gameplay : MonoBehaviour
     {
         if (onResumeButtonPressed != null)
             onResumeButtonPressed();
+
+        SoundManager.Get().PlaySound(SoundManager.Sounds.Button);
     }
 
     public void ReturnToMainMenu()
     {
         SceneManager.LoadScene("Main Menu");
+
+        SoundManager.Get().PlaySound(SoundManager.Sounds.Button);
     }
 
     public void GoToNextLevel()
@@ -93,5 +97,7 @@ public class UIManager_Gameplay : MonoBehaviour
 
         if (onNextLevelButtonPressed != null)
             onNextLevelButtonPressed();
+
+        SoundManager.Get().PlaySound(SoundManager.Sounds.Button);
     }
 }

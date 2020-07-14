@@ -10,18 +10,24 @@ public class UIManager_MainMenu : MonoBehaviour
     public void Play()
     {
         SceneManager.LoadScene("Gameplay");
+
+        SoundManager.Get().PlaySound(SoundManager.Sounds.Button);
     }
 
     public void ViewInstructionsMenu()
     {
         if (mainMenu) mainMenu.SetActive(false);
         if (instructionsMenu) instructionsMenu.SetActive(true);
+
+        SoundManager.Get().PlaySound(SoundManager.Sounds.Button);
     }
 
     public void ViewCreditsMenu()
     {
         if (mainMenu) mainMenu.SetActive(false);
         if (creditsMenu) creditsMenu.SetActive(true);
+
+        SoundManager.Get().PlaySound(SoundManager.Sounds.Button);
     }
 
     public void Return()
@@ -32,10 +38,14 @@ public class UIManager_MainMenu : MonoBehaviour
             creditsMenu.SetActive(false);
 
         if (mainMenu) mainMenu.SetActive(true);
+
+        SoundManager.Get().PlaySound(SoundManager.Sounds.Button);
     }
 
     public void Quit()
     {
         Application.Quit();
+
+        SoundManager.Get().PlaySound(SoundManager.Sounds.Button);
     }
 }

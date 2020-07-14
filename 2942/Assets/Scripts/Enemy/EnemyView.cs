@@ -3,10 +3,11 @@ using UnityEngine;
 
 public class EnemyView : MonoBehaviour
 {
-    bool damageColorOn;
+    bool damageColorOn = false;
 
     float damageColorDuration;
 
+    public ParticleSystem thrustParticleSystem;
     GameObject explosionPrefab;
     Transform explosionContainer;
     Color damageColor;
@@ -15,6 +16,8 @@ public class EnemyView : MonoBehaviour
     void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
+
+        thrustParticleSystem.Play();
     }
 
     public void CheckIfDamageColorOn()
