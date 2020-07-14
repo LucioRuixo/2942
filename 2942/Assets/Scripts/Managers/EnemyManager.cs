@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class EnemyManager : MonoBehaviour
 {
-    public enum EnemyTypes
+    public enum Types
     {
         Locust,
         Mantis
     }
 
-    struct Enemy
+    struct EnemyData
     {
         public int itemGenerationPercentage;
 
@@ -19,7 +19,7 @@ public class EnemyManager : MonoBehaviour
         public float height;
         public float width;
 
-        public EnemyTypes type;
+        public Types type;
 
         public GameObject prefab;
     }
@@ -38,7 +38,7 @@ public class EnemyManager : MonoBehaviour
     public Transform explosionContainer;
 
     public List<EnemySO> enemySOs;
-    List<Enemy> enemies;
+    List<EnemyData> enemies;
     List<EnemyController> currentEnemies;
 
     [Header("General enemy attributes")]
@@ -60,7 +60,7 @@ public class EnemyManager : MonoBehaviour
 
     void Start()
     {
-        enemies = new List<Enemy>();
+        enemies = new List<EnemyData>();
         currentEnemies = new List<EnemyController>();
 
         for (int i = 0; i < enemySOs.Count; i++)
@@ -86,15 +86,15 @@ public class EnemyManager : MonoBehaviour
         lowerScreenLimit = bottom;
     }
 
-    Enemy Initialize(EnemySO enemySOs)
+    EnemyData Initialize(EnemySO enemySO)
     {
-        Enemy newEnemy;
+        EnemyData newEnemy;
 
-        newEnemy.itemGenerationPercentage = enemySOs.itemGenerationPercentage;
-        newEnemy.minWaitTime = enemySOs.minWaitTime;
-        newEnemy.maxWaitTime = enemySOs.maxWaitTime;
-        newEnemy.type = enemySOs.type;
-        newEnemy.prefab = enemySOs.prefab;
+        newEnemy.itemGenerationPercentage = enemySO.itemGenerationPercentage;
+        newEnemy.minWaitTime = enemySO.minWaitTime;
+        newEnemy.maxWaitTime = enemySO.maxWaitTime;
+        newEnemy.type = enemySO.type;
+        newEnemy.prefab = enemySO.prefab;
 
         newEnemy.height = newEnemy.prefab.GetComponent<SpriteRenderer>().size.y / 2f;
         newEnemy.width = newEnemy.prefab.GetComponent<SpriteRenderer>().size.x / 2f;
@@ -102,19 +102,19 @@ public class EnemyManager : MonoBehaviour
         return newEnemy;
     }
 
-    Vector2 SetNewEnemyPosition(Enemy enemy)
+    Vector2 SetNewEnemyPosition(EnemyData enemy)
     {
         float positionXValue;
         Vector2 position;
 
         switch (enemy.type)
         {
-            case EnemyTypes.Locust:
+            case Types.Locust:
                 positionXValue = Random.Range(rightScreenLimit + enemy.width, leftScreenLimit - enemy.width);
                 float initialYValue = upperScreenLimit + enemy.height;
                 position = new Vector2(positionXValue, initialYValue);
                 break;
-            case EnemyTypes.Mantis:
+            case Types.Mantis:
                 bool rightSide = Random.Range(0, 2) % 2 == 0 ? true : false;
                 positionXValue = rightSide ? leftScreenLimit - enemy.height : rightScreenLimit + enemy.height;
                 float positionYValue = Random.Range(lowerScreenLimit + enemy.width, upperScreenLimit - enemy.width);
@@ -128,18 +128,18 @@ public class EnemyManager : MonoBehaviour
         return position;
     }
 
-    Quaternion SetNewEnemyRotation(Enemy enemy, Vector3 position)
+    Quaternion SetNewEnemyRotation(EnemyData enemy, Vector3 position)
     {
         Vector3 rotationEuler;
         Quaternion rotation;
 
         switch (enemy.type)
         {
-            case EnemyTypes.Locust:
+            case Types.Locust:
                 rotationEuler = new Vector3(0f, 0f, 180f);
                 rotation = Quaternion.Euler(rotationEuler);
                 break;
-            case EnemyTypes.Mantis:
+            case Types.Mantis:
                 rotationEuler = Vector3.zero;
                 bool rightSide = position.x > 0f ? true : false;
                 rotationEuler.z = rightSide ? 90f : -90f;
@@ -187,7 +187,7 @@ public class EnemyManager : MonoBehaviour
         }
     }
 
-    IEnumerator Generate(Enemy enemy)
+    IEnumerator Generate(EnemyData enemy)
     {
         while (active)
         {

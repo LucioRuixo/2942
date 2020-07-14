@@ -13,7 +13,7 @@ public class PlayerModel : MonoBehaviour
 
     public float bombDetonationTime;
     public float bombCooldownTime;
-    public float powerPlusDuration;
+    public float itemEffectDuration;
 
     [Header("From scriptable object")]
     public int energy;
@@ -69,6 +69,11 @@ public class PlayerModel : MonoBehaviour
     {
         if (onVictory != null)
             onVictory(true, score);
+    }
+
+    public float GetItemEffectDuration()
+    {
+        return itemEffectDuration;
     }
 
     public void TakeDamage(int damage)

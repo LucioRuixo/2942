@@ -9,11 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f999f7205e7968c4ea5ef93917f7c96a, type: 3}
-  m_Name: Regular Mantis
+  m_Script: {fileID: 11500000, guid: 72dcd87ae305ac24eb55313e955b8163, type: 3}
+  m_Name: Energy+
   m_EditorClassIdentifier: 
-  itemGenerationPercentage: 15
-  minWaitTime: 0.25
-  maxWaitTime: 0.75
-  type: 1
-  prefab: {fileID: 951139688195685958, guid: 55c6f3303c7812c419cc48fe0d3ad3f2, type: 3}
+  type: 0
+  prefab: {fileID: 6241578922921806121, guid: 5a7faa4c4b72443498c89b76fa8e892f, type: 3}

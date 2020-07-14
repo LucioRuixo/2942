@@ -8,7 +8,7 @@ public class Proyectile : MonoBehaviour
     int damage;
 
     float speedMultiplier = 1.5f;
-    float powerPlusSizeMultiplier = 2f;
+    float powerPlusSizeMultiplier = 3f;
     float rotationAngleRange = 6f;
     float movementSpeed;
     float height;

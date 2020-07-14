@@ -8,7 +8,7 @@ public class EnemySO : ScriptableObject
     public float minWaitTime;
     public float maxWaitTime;
 
-    public EnemyManager.EnemyTypes type;
+    public EnemyManager.Types type;
 
     public GameObject prefab;
 }

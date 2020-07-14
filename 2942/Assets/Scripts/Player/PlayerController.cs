@@ -28,14 +28,14 @@ public class PlayerController : MonoBehaviour
 
     public static event Action onCollision;
     public static event Action<bool> onBombStateUpdate;
+    public static event Action onBulletTimeUsage;
     public static event Action onLevelEndReached;
 
     void OnEnable()
     {
         GameManager.onScreenLimitsSetting += SetScreenLimits;
 
-        Item.onEnergyPlus += ApplyEnergyPlus;
-        Item.onPowerPlus += ApplyPowerPlus;
+        Item.onItemAdquisition += UseItem;
     }
 
     void Start()
@@ -78,8 +78,7 @@ public class PlayerController : MonoBehaviour
     {
         GameManager.onScreenLimitsSetting -= SetScreenLimits;
 
-        Item.onEnergyPlus -= ApplyEnergyPlus;
-        Item.onPowerPlus -= ApplyPowerPlus;
+        Item.onItemAdquisition -= UseItem;
     }
 
     void SetScreenLimits(float left, float right, float top, float bottom)
@@ -148,16 +147,24 @@ public class PlayerController : MonoBehaviour
             onBombStateUpdate(canPlaceBomb);
     }
 
-    void ApplyEnergyPlus()
+    void UseItem(ItemManager.Types type)
     {
-        model.RefillEnergy();
-    }
-
-    void ApplyPowerPlus()
-    {
-        powerPlusOn = true;
-
-        StartCoroutine(PowerPlusTimer());
+        switch (type)
+        {
+            case ItemManager.Types.EnergyPlus:
+                model.RefillEnergy();
+                break;
+            case ItemManager.Types.PowerPlus:
+                powerPlusOn = true;
+                StartCoroutine(PowerPlusTimer());
+                break;
+            case ItemManager.Types.BulletTime:
+                if (onBulletTimeUsage != null)
+                    onBulletTimeUsage();
+                break;
+            default:
+                break;
+        }
     }
 
     public void Destroy()
@@ -176,7 +183,7 @@ public class PlayerController : MonoBehaviour
 
     IEnumerator PowerPlusTimer()
     {
-        yield return new WaitForSeconds(model.powerPlusDuration);
+        yield return new WaitForSeconds(model.itemEffectDuration);
 
         powerPlusOn = false;
     }

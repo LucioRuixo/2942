@@ -3,17 +3,16 @@ using UnityEngine;
 
 public class Item : MonoBehaviour
 {
-    float movementPerSecond = 2f;
+    float movementPerSecond;
     float height;
     float leftScreenLimit;
     float rightScreenLimit;
     float lowerScreenLimit;
     float upperScreenLimit;
 
-    ItemManager.ItemTypes type;
+    ItemManager.Types type;
 
-    public static event Action onEnergyPlus;
-    public static event Action onPowerPlus;
+    public static event Action<ItemManager.Types> onItemAdquisition;
 
     void Start()
     {
@@ -24,16 +23,22 @@ public class Item : MonoBehaviour
     {
         if (collision.tag != "Player") return;
 
-        switch (type)
+        if (onItemAdquisition != null)
         {
-            case ItemManager.ItemTypes.EnergyPlus:
-                EnergyPlus();
-                break;
-            case ItemManager.ItemTypes.PowerPlus:
-                PowerPlus();
-                break;
-            default:
-                break;
+            switch (type)
+            {
+                case ItemManager.Types.EnergyPlus:
+                        onItemAdquisition(ItemManager.Types.EnergyPlus);
+                    break;
+                case ItemManager.Types.PowerPlus:
+                    onItemAdquisition(ItemManager.Types.PowerPlus);
+                    break;
+                case ItemManager.Types.BulletTime:
+                    onItemAdquisition(ItemManager.Types.BulletTime);
+                    break;
+                default:
+                    break;
+            }
         }
 
         Destroy(gameObject);
@@ -59,21 +64,10 @@ public class Item : MonoBehaviour
                y < lowerScreenLimit - height || y > upperScreenLimit + height ? true : false;
     }
 
-    void EnergyPlus()
+    public void Initialize(float movementPerSecond, ItemManager.Types type)
     {
-        if (onEnergyPlus != null)
-            onEnergyPlus();
-    }
-
-    void PowerPlus()
-    {
-        if (onPowerPlus != null)
-            onPowerPlus();
-    }
-
-    public void SetType(ItemManager.ItemTypes newType)
-    {
-        type = newType;
+        this.movementPerSecond = movementPerSecond;
+        this.type = type;
     }
 
     public void SetScreenLimits(float left, float right, float top, float bottom)

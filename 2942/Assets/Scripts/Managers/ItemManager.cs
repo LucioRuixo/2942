@@ -1,34 +1,53 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class ItemManager : MonoBehaviour
 {
-    public enum ItemTypes
+    public enum Types
     {
         EnergyPlus,
         PowerPlus,
-        Size
+        BulletTime
     }
 
+    struct ItemData
+    {
+        public Types type;
+
+        public GameObject prefab;
+    }
+
+    public float movementPerSecond;
     float leftScreenLimit;
     float rightScreenLimit;
     float upperScreenLimit;
     float lowerScreenLimit;
 
-    public GameObject energyPlusPrefab;
-    public GameObject powerPlusPrefab;
+    public List<ItemSO> itemSOs;
+    List<ItemData> items;
 
     void OnEnable()
     {
         GameManager.onScreenLimitsSetting += SetScreenLimits;
 
-        EnemyModel.onItemGeneration += GenerateItem;
+        EnemyModel.onItemGeneration += Generate;
+    }
+
+    void Start()
+    {
+        items = new List<ItemData>();
+
+        for (int i = 0; i < itemSOs.Count; i++)
+        {
+            items.Add(Initialize(itemSOs[i]));
+        }
     }
 
     void OnDisable()
     {
         GameManager.onScreenLimitsSetting -= SetScreenLimits;
 
-        EnemyModel.onItemGeneration -= GenerateItem;
+        EnemyModel.onItemGeneration -= Generate;
     }
 
     void SetScreenLimits(float left, float right, float top, float bottom)
@@ -39,32 +58,24 @@ public class ItemManager : MonoBehaviour
         lowerScreenLimit = bottom;
     }
 
-    void GenerateItem(float x, float y)
+    ItemData Initialize(ItemSO itemSO)
+    {
+        ItemData newItem;
+
+        newItem.type = itemSO.type;
+        newItem.prefab = itemSO.prefab;
+
+        return newItem;
+    }
+
+    void Generate(float x, float y)
     {
         Vector2 position = new Vector2(x, y);
 
-        ItemTypes type = (ItemTypes)Random.Range(0, (int)ItemTypes.Size);
+        ItemData newItem = items[Random.Range(0, items.Count)];
 
-        GameObject prefab;
-
-        switch (type)
-        {
-            case ItemTypes.EnergyPlus:
-                prefab = energyPlusPrefab;
-                break;
-            case ItemTypes.PowerPlus:
-                prefab = powerPlusPrefab;
-                break;
-            default:
-                prefab = null;
-                break;
-        }
-
-        if (prefab)
-        {
-            Item item = Instantiate(prefab, position, Quaternion.identity, transform).GetComponent<Item>();
-            item.SetType(type);
-            item.SetScreenLimits(leftScreenLimit, rightScreenLimit, upperScreenLimit, lowerScreenLimit);
-        }
+        Item item = Instantiate(newItem.prefab, position, Quaternion.identity, transform).GetComponent<Item>();
+        item.Initialize(movementPerSecond, newItem.type);
+        item.SetScreenLimits(leftScreenLimit, rightScreenLimit, upperScreenLimit, lowerScreenLimit);
     }
 }

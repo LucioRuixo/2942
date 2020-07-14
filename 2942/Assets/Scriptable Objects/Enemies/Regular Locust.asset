@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f999f7205e7968c4ea5ef93917f7c96a, type: 3}
   m_Name: Regular Locust
   m_EditorClassIdentifier: 
-  itemGenerationPercentage: 5
+  itemGenerationPercentage: 10
   minWaitTime: 0.5
   maxWaitTime: 0.75
   type: 0

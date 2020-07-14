@@ -252,7 +252,7 @@ MonoBehaviour:
   enemySOs:
   - {fileID: 11400000, guid: 1cd173329c5a82e46b94a19ed425f2c7, type: 2}
   - {fileID: 11400000, guid: b56ee23202ffdc0419a18c09eb9ad09f, type: 2}
-  collisionDamage: 50
+  collisionDamage: 30
   initialWaitTime: 3
   damageColor: {r: 1, g: 0.29411766, b: 0.29411766, a: 1}
   damageColorDuration: 0.25
@@ -1908,9 +1908,9 @@ MonoBehaviour:
   controller: {fileID: 1019439285}
   score: 0
   bombDamage: 1000
-  bombDetonationTime: 3
+  bombDetonationTime: 1
   bombCooldownTime: 10
-  powerPlusDuration: 5
+  itemEffectDuration: 5
   energy: 0
   damage: 0
   movementSpeed: 0
@@ -2699,11 +2699,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38b4731473069a840a604c61e77608c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  BulletTimeScale: 0.2
   leftScreenLimit: 0
   rightScreenLimit: 0
   lowerScreenLimit: 0
   upperScreenLimit: 0
   screenBounds: {x: 0, y: 0}
+  playerModel: {fileID: 1019439284}
 --- !u!4 &1302642217
 Transform:
   m_ObjectHideFlags: 0
@@ -4354,10 +4356,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6eeb31c94b696c44ad375c842b0028a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  energyPlusPrefab: {fileID: 6241578922921806121, guid: 5a7faa4c4b72443498c89b76fa8e892f,
-    type: 3}
-  powerPlusPrefab: {fileID: 4984647829507031104, guid: 11b2db6e42197b043b99a35c175ddf64,
-    type: 3}
+  movementPerSecond: 2
+  itemSOs:
+  - {fileID: 11400000, guid: 343523f0769983d4f8ae5e1731263a06, type: 2}
+  - {fileID: 11400000, guid: 844b3acf8ab9e1848818551d3958e247, type: 2}
+  - {fileID: 11400000, guid: c1f40e953d53c4343b06f498ba558e6f, type: 2}
 --- !u!1 &1860945746
 GameObject:
   m_ObjectHideFlags: 0
