@@ -6668,7 +6668,7 @@ MonoBehaviour:
   itemEffectDuration: 10
   shotgunProyectileAngle: 5
   machineGunCooldownTime: 0.1
-  shotgunCooldownTime: 0.7
+  shotgunCooldownTime: 0.5
   energy: 0
   damage: 0
   movementSpeed: 0

@@ -76,10 +76,6 @@ public class HomingMissile : MonoBehaviour
 
         Vector2 directionToTarget = target.position - transform.position;
 
-        Debug.Log("Forward: " + transform.up + ", To target: " + directionToTarget);
-        Debug.DrawRay(transform.position, directionToTarget, Color.red);
-        Debug.DrawRay(transform.position, transform.up * 50, Color.blue);
-
         float angle = Vector2.Angle(transform.up, directionToTarget);
         if (targetOnRight)
             angle *= -1;
