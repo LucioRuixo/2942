@@ -24,22 +24,7 @@ public class Item : MonoBehaviour
         if (collision.tag != "Player") return;
 
         if (onItemAdquisition != null)
-        {
-            switch (type)
-            {
-                case ItemManager.Types.EnergyPlus:
-                        onItemAdquisition(ItemManager.Types.EnergyPlus);
-                    break;
-                case ItemManager.Types.PowerPlus:
-                    onItemAdquisition(ItemManager.Types.PowerPlus);
-                    break;
-                case ItemManager.Types.BulletTime:
-                    onItemAdquisition(ItemManager.Types.BulletTime);
-                    break;
-                default:
-                    break;
-            }
-        }
+            onItemAdquisition(type);
 
         SoundManager.Get().PlaySound(SoundManager.Sounds.Item);
 

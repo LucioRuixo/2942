@@ -1,8 +1,7 @@
 ﻿using UnityEngine;
 
-public class Proyectile : MonoBehaviour
+public class HomingMissile : MonoBehaviour
 {
-    bool playerProyectile;
     bool powerPlusOn;
 
     int damage;
@@ -19,6 +18,8 @@ public class Proyectile : MonoBehaviour
 
     Vector3 movement;
 
+    Transform target;
+
     void OnEnable()
     {
         LevelManager.onNewLevelSetting += Destroy;
@@ -26,8 +27,7 @@ public class Proyectile : MonoBehaviour
 
     void Start()
     {
-        SetRotation();
-        movement = -transform.up * movementSpeed * speedMultiplier;
+        movement = transform.up * movementSpeed * speedMultiplier;
 
         if (powerPlusOn)
             ApplyPowerPlus();
@@ -37,14 +37,17 @@ public class Proyectile : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if ((collision.tag == "Enemy" && playerProyectile)
-            ||
-            (collision.tag == "Player" && !playerProyectile))
+        if (collision.tag == "Enemy")
             Destroy(gameObject);
     }
 
     void Update()
     {
+        if (target)
+        {
+            RotateTowardsTarget();
+            movement = transform.up * movementSpeed * speedMultiplier;
+        }
         transform.position += movement * Time.deltaTime;
 
         if (OffScreen())
@@ -56,15 +59,6 @@ public class Proyectile : MonoBehaviour
         LevelManager.onNewLevelSetting -= Destroy;
     }
 
-    void SetRotation()
-    {
-        float addedRotationZ = Random.Range(-(rotationAngleRange / 2f), rotationAngleRange / 2f);
-        Vector3 addedRotationEuler = new Vector3(0f, 0f, addedRotationZ);
-        Quaternion addedRotation = Quaternion.Euler(addedRotationEuler);
-
-        transform.rotation *= addedRotation;
-    }
-
     void ApplyPowerPlus()
     {
         Vector3 scale = transform.localScale;
@@ -74,6 +68,27 @@ public class Proyectile : MonoBehaviour
 
         BoxCollider2D collider = GetComponent<BoxCollider2D>();
         collider.size *= powerPlusSizeMultiplier;
+    }
+
+    void RotateTowardsTarget()
+    {
+        bool targetOnRight = target.position.x > transform.position.x;
+
+        Vector2 directionToTarget = target.position - transform.position;
+
+        Debug.Log("Forward: " + transform.up + ", To target: " + directionToTarget);
+        Debug.DrawRay(transform.position, directionToTarget, Color.red);
+        Debug.DrawRay(transform.position, transform.up * 50, Color.blue);
+
+        float angle = Vector2.Angle(transform.up, directionToTarget);
+        if (targetOnRight)
+            angle *= -1;
+
+        float addedRotationEulerZ = Mathf.Clamp(angle, -rotationAngleRange / 2f, rotationAngleRange / 2f);
+        Vector3 addedRotationEuler = new Vector3(0f, 0f, addedRotationEulerZ);
+        Quaternion addedRotation = Quaternion.Euler(addedRotationEuler);
+
+        transform.rotation *= addedRotation;
     }
 
     bool OffScreen()
@@ -91,18 +106,9 @@ public class Proyectile : MonoBehaviour
         Destroy(gameObject);
     }
 
-    public void InitializeAsPlayerProyectile(bool powerPlusOn, int damage, float movementSpeed)
+    public void Initialize(bool powerPlusOn, int damage, float movementSpeed)
     {
-        playerProyectile = true;
         this.powerPlusOn = powerPlusOn;
-        this.damage = damage;
-        this.movementSpeed = movementSpeed;
-    }
-
-    public void InitializeAsEnemyProyectile(int damage, float movementSpeed)
-    {
-        playerProyectile = false;
-        powerPlusOn = false;
         this.damage = damage;
         this.movementSpeed = movementSpeed;
     }
@@ -113,6 +119,11 @@ public class Proyectile : MonoBehaviour
         rightScreenLimit = right;
         upperScreenLimit = top;
         lowerScreenLimit = bottom;
+    }
+
+    public void SetTarget(Transform target)
+    {
+        this.target = target;
     }
 
     public int GetDamage()

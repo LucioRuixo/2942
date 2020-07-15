@@ -7,8 +7,18 @@ public class PlayerController : MonoBehaviour
     public PlayerModel model;
     public PlayerView view;
 
+    enum Weapons
+    {
+        RegularGun,
+        MachineGun,
+        Shotgun,
+        HomingMissile
+    }
+
     bool canPlaceBomb = true;
     bool powerPlusOn = false;
+    bool machineGunReady = true;
+    bool shotgunReady = true;
 
     float width;
     float height;
@@ -19,16 +29,24 @@ public class PlayerController : MonoBehaviour
 
     [HideInInspector] public Vector3 forward;
     Vector3 movement;
+    Vector3 proyectileRotationEuler;
+
+    Quaternion proyectileRotation;
+
+    Weapons currentWeapon;
 
     public GameObject bombPrefab;
     public GameObject proyectilePrefab;
+    public GameObject homingMissilePrefab;
     public Transform rightCannon;
     public Transform leftCannon;
+    public Transform missileCannon;
     public Transform proyectileContainer;
 
     public static event Action onCollision;
     public static event Action<bool> onBombStateUpdate;
     public static event Action onBulletTimeUsage;
+    public static event Action<HomingMissile> onHomingMissileLaunch;
     public static event Action onLevelEndReached;
 
     void OnEnable()
@@ -44,6 +62,11 @@ public class PlayerController : MonoBehaviour
         height = transform.GetComponent<SpriteRenderer>().bounds.size.y / 2f;
 
         forward = transform.up;
+
+        proyectileRotationEuler = new Vector3(0f, 0f, 180f);
+        proyectileRotation = Quaternion.Euler(proyectileRotationEuler);
+
+        currentWeapon = Weapons.RegularGun;
 
         if (onBombStateUpdate != null)
             onBombStateUpdate(canPlaceBomb);
@@ -93,7 +116,7 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetButtonDown("Vertical") && Input.GetAxisRaw("Vertical") > 0f)
             view.ToggleThrustParticleSystem(true);
-        if (Input.GetButtonDown("Shoot"))
+        if (currentWeapon != Weapons.MachineGun && Input.GetButtonDown("Shoot"))
             Shoot();
         if (Input.GetButtonDown("Place Bomb") && canPlaceBomb)
             PlaceBomb();
@@ -104,6 +127,12 @@ public class PlayerController : MonoBehaviour
         if (Input.GetButton("Vertical"))
             movement.y += Input.GetAxisRaw("Vertical");
         UpdatePosition(movement);
+        if (currentWeapon == Weapons.MachineGun && machineGunReady && Input.GetButton("Shoot"))
+        {
+            Shoot();
+            machineGunReady = false;
+            StartCoroutine(WeaponCooldown(Weapons.MachineGun, model.machineGunCooldownTime));
+        }
 
         if (Input.GetButtonUp("Vertical"))
             view.ToggleThrustParticleSystem(false);
@@ -122,20 +151,69 @@ public class PlayerController : MonoBehaviour
 
     void Shoot()
     {
-        Vector3 rotationEuler = new Vector3(0f, 0f, 180f);
-        Quaternion rotation = Quaternion.Euler(rotationEuler);
-
-        Proyectile newProyectile;
-
-        newProyectile = Instantiate(proyectilePrefab, rightCannon.position, rotation, proyectileContainer).GetComponent<Proyectile>();
-        newProyectile.InitializeAsPlayerProyectile(powerPlusOn, model.damage, model.movementSpeed);
-        newProyectile.SetScreenLimits(leftScreenLimit, rightScreenLimit, upperScreenLimit, lowerScreenLimit);
-
-        newProyectile = Instantiate(proyectilePrefab, leftCannon.position, rotation, proyectileContainer).GetComponent<Proyectile>();
-        newProyectile.InitializeAsPlayerProyectile(powerPlusOn, model.damage, model.movementSpeed);
-        newProyectile.SetScreenLimits(leftScreenLimit, rightScreenLimit, upperScreenLimit, lowerScreenLimit);
+        switch (currentWeapon)
+        {
+            case Weapons.RegularGun:
+            case Weapons.MachineGun:
+                ShootRegularGun();
+                break;
+            case Weapons.Shotgun:
+                if (shotgunReady)
+                {
+                    ShootShotgun();
+                    shotgunReady = false;
+                    StartCoroutine(WeaponCooldown(Weapons.Shotgun, model.shotgunCooldownTime));
+                }
+                break;
+            case Weapons.HomingMissile:
+                LaunchHomingMissile();
+                break;
+            default:
+                break;
+        }
 
         SoundManager.Get().PlaySound(SoundManager.Sounds.PlayerShot);
+    }
+
+    void ShootRegularGun()
+    {
+        ShootProyectile(true, proyectileRotation);
+        ShootProyectile(false, proyectileRotation);
+    }
+
+    void ShootShotgun()
+    {
+        ShootProyectile(true, proyectileRotation);
+        ShootProyectile(false, proyectileRotation);
+
+        Vector3 addedRotationEuler = new Vector3(0f, 0f, -model.shotgunProyectileAngle);
+        Quaternion addedRotation = Quaternion.Euler(addedRotationEuler);
+        ShootProyectile(true, proyectileRotation * addedRotation);
+        ShootProyectile(false, proyectileRotation * addedRotation);
+
+        addedRotationEuler = new Vector3(0f, 0f, model.shotgunProyectileAngle);
+        addedRotation = Quaternion.Euler(addedRotationEuler);
+        ShootProyectile(true, proyectileRotation * addedRotation);
+        ShootProyectile(false, proyectileRotation * addedRotation);
+    }
+
+    void LaunchHomingMissile()
+    {
+        HomingMissile newMissile = Instantiate(homingMissilePrefab, missileCannon.position, Quaternion.identity, proyectileContainer).GetComponent<HomingMissile>();
+        newMissile.Initialize(powerPlusOn, model.missileDamage, model.movementSpeed);
+        newMissile.SetScreenLimits(leftScreenLimit, rightScreenLimit, upperScreenLimit, lowerScreenLimit);
+
+        if (onHomingMissileLaunch != null)
+            onHomingMissileLaunch(newMissile);
+    }
+
+    void ShootProyectile(bool fromRightCannon, Quaternion rotation)
+    {
+        Vector2 position = fromRightCannon ? rightCannon.position : leftCannon.position;
+
+        Proyectile newProyectile = Instantiate(proyectilePrefab, position, rotation, proyectileContainer).GetComponent<Proyectile>();
+        newProyectile.InitializeAsPlayerProyectile(powerPlusOn, model.damage, model.movementSpeed);
+        newProyectile.SetScreenLimits(leftScreenLimit, rightScreenLimit, upperScreenLimit, lowerScreenLimit);
     }
 
     void PlaceBomb()
@@ -159,11 +237,23 @@ public class PlayerController : MonoBehaviour
                 break;
             case ItemManager.Types.PowerPlus:
                 powerPlusOn = true;
-                StartCoroutine(PowerPlusTimer());
+                StartCoroutine(ItemTimer(type));
                 break;
             case ItemManager.Types.BulletTime:
                 if (onBulletTimeUsage != null)
                     onBulletTimeUsage();
+                break;
+            case ItemManager.Types.MachineGun:
+                currentWeapon = Weapons.MachineGun;
+                StartCoroutine(ItemTimer(type));
+                break;
+            case ItemManager.Types.Shotgun:
+                currentWeapon = Weapons.Shotgun;
+                StartCoroutine(ItemTimer(type));
+                break;
+            case ItemManager.Types.HomingMissile:
+                currentWeapon = Weapons.HomingMissile;
+                StartCoroutine(ItemTimer(type));
                 break;
             default:
                 break;
@@ -184,10 +274,32 @@ public class PlayerController : MonoBehaviour
         canPlaceBomb = true;
     }
 
-    IEnumerator PowerPlusTimer()
+    IEnumerator ItemTimer(ItemManager.Types type)
     {
         yield return new WaitForSeconds(model.itemEffectDuration);
 
-        powerPlusOn = false;
+        switch (type)
+        {
+            case ItemManager.Types.PowerPlus:
+                powerPlusOn = false;
+                break;
+            case ItemManager.Types.MachineGun:
+            case ItemManager.Types.Shotgun:
+            case ItemManager.Types.HomingMissile:
+                currentWeapon = Weapons.RegularGun;
+                break;
+            default:
+                break;
+        }
+    }
+
+    IEnumerator WeaponCooldown(Weapons weapon, float waitTime)
+    {
+        yield return new WaitForSeconds(waitTime);
+
+        if (weapon == Weapons.MachineGun)
+            machineGunReady = true;
+        else
+            shotgunReady = true;
     }
 }

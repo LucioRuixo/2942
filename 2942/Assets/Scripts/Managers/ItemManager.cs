@@ -7,7 +7,10 @@ public class ItemManager : MonoBehaviour
     {
         EnergyPlus,
         PowerPlus,
-        BulletTime
+        BulletTime,
+        MachineGun,
+        Shotgun,
+        HomingMissile
     }
 
     struct ItemData
@@ -68,10 +71,8 @@ public class ItemManager : MonoBehaviour
         return newItem;
     }
 
-    void Generate(float x, float y)
+    void Generate(Vector2 position)
     {
-        Vector2 position = new Vector2(x, y);
-
         ItemData newItem = items[Random.Range(0, items.Count)];
 
         Item item = Instantiate(newItem.prefab, position, Quaternion.identity, transform).GetComponent<Item>();

@@ -56,6 +56,8 @@ public class EnemyManager : MonoBehaviour
         LevelManager.onNewLevelSetting += SetOnNewLevel;
         LevelManager.onLevelEndReached += StopGeneration;
         LevelManager.onLastLevelCompleted += StopGeneration;
+
+        PlayerController.onHomingMissileLaunch += InitializeHommingMissileData;
     }
 
     void Start()
@@ -76,6 +78,8 @@ public class EnemyManager : MonoBehaviour
         LevelManager.onNewLevelSetting -= SetOnNewLevel;
         LevelManager.onLevelEndReached -= StopGeneration;
         LevelManager.onLastLevelCompleted -= StopGeneration;
+
+        PlayerController.onHomingMissileLaunch -= InitializeHommingMissileData;
     }
 
     void SetScreenLimits(float left, float right, float top, float bottom)
@@ -174,6 +178,25 @@ public class EnemyManager : MonoBehaviour
         }
 
         currentEnemies.Clear();
+    }
+
+    void InitializeHommingMissileData(HomingMissile missile)
+    {
+        Vector2 missilePosition = missile.transform.position;
+
+        float smallestDistance = 1000f;
+        Transform target = null;
+        foreach (EnemyController enemy in currentEnemies)
+        {
+            if (enemy)
+            {
+                float distanceToEnemy = Vector2.Distance(missilePosition, enemy.transform.position);
+                if (distanceToEnemy < smallestDistance)
+                    target = enemy.transform;
+            }
+        }
+
+        missile.SetTarget(target);
     }
 
     IEnumerator WaitToGenerate()

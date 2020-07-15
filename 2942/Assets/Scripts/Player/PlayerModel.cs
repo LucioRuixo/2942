@@ -10,17 +10,20 @@ public class PlayerModel : MonoBehaviour
 
     [Header("Variable attributes")]
     public int bombDamage;
+    public int missileDamage;
 
     public float bombDetonationTime;
     public float bombCooldownTime;
     public float itemEffectDuration;
+    public float shotgunProyectileAngle;
+    public float machineGunCooldownTime;
+    public float shotgunCooldownTime;
 
     [Header("From scriptable object")]
     public int energy;
     public int damage;
 
     public float movementSpeed;
-    public float shootingInterval;
 
     public static event Action<int> onEnergyUpdate;
     public static event Action<int> onScoreUpdate;
@@ -41,7 +44,6 @@ public class PlayerModel : MonoBehaviour
         score = 0;
 
         movementSpeed = stats.movementSpeed;
-        shootingInterval = stats.shootingInterval;
 
         if (onEnergyUpdate != null)
             onEnergyUpdate(energy);

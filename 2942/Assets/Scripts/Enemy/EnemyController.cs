@@ -50,13 +50,24 @@ public class EnemyController : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.tag == "Player Proyectile" || collision.tag == "Explosion")
+        if (collision.tag == "Player Proyectile" || collision.tag == "Homing Missile" || collision.tag == "Explosion")
         {
             int damageTaken;
-            if (collision.tag == "Player Proyectile")
-                damageTaken = collision.GetComponent<Proyectile>().GetDamage();
-            else
-                damageTaken = collision.GetComponent<Explosion>().GetDamage();
+            switch (collision.tag)
+            {
+                case "Player Proyectile":
+                    damageTaken = collision.GetComponent<Proyectile>().GetDamage();
+                    break;
+                case "Homing Missile":
+                    damageTaken = collision.GetComponent<HomingMissile>().GetDamage();
+                    break;
+                case "Explosion":
+                    damageTaken = collision.GetComponent<Explosion>().GetDamage();
+                    break;
+                default:
+                    damageTaken = 0;
+                    break;
+            }
 
             model.TakeDamage(damageTaken);
             view.CheckIfDamageColorOn();

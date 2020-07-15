@@ -286,7 +286,7 @@ Transform:
   m_LocalScale: {x: 0.1, y: 0.1, z: 1}
   m_Children: []
   m_Father: {fileID: 1019439287}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!199 &74045733
 ParticleSystemRenderer:
@@ -6662,13 +6662,16 @@ MonoBehaviour:
   controller: {fileID: 1019439285}
   score: 0
   bombDamage: 1000
+  missileDamage: 500
   bombDetonationTime: 1
   bombCooldownTime: 10
-  itemEffectDuration: 5
+  itemEffectDuration: 10
+  shotgunProyectileAngle: 5
+  machineGunCooldownTime: 0.1
+  shotgunCooldownTime: 0.7
   energy: 0
   damage: 0
   movementSpeed: 0
-  shootingInterval: 0
 --- !u!114 &1019439285
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6688,8 +6691,11 @@ MonoBehaviour:
     type: 3}
   proyectilePrefab: {fileID: 1391182061237836488, guid: 9c5d10f6f771c0948a28b6945716717d,
     type: 3}
+  homingMissilePrefab: {fileID: 8890691879209599149, guid: 8572f9c7f0b515944a85726307dee0bd,
+    type: 3}
   rightCannon: {fileID: 478020709}
   leftCannon: {fileID: 1344438527}
+  missileCannon: {fileID: 1461217086}
   proyectileContainer: {fileID: 49080075}
 --- !u!212 &1019439286
 SpriteRenderer:
@@ -6754,6 +6760,7 @@ Transform:
   m_Children:
   - {fileID: 478020709}
   - {fileID: 1344438527}
+  - {fileID: 1461217086}
   - {fileID: 74045732}
   m_Father: {fileID: 0}
   m_RootOrder: 10
@@ -7901,6 +7908,36 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 9
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1461217085
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1461217086}
+  m_Layer: 0
+  m_Name: Missile Cannon
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1461217086
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1461217085}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1019439287}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1474481655
 GameObject:
@@ -9269,6 +9306,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 343523f0769983d4f8ae5e1731263a06, type: 2}
   - {fileID: 11400000, guid: 844b3acf8ab9e1848818551d3958e247, type: 2}
   - {fileID: 11400000, guid: c1f40e953d53c4343b06f498ba558e6f, type: 2}
+  - {fileID: 11400000, guid: 04f667c8e5a09f842b5c226ad4a60eac, type: 2}
+  - {fileID: 11400000, guid: 68234b30c458bad4cac3a86908b7676d, type: 2}
+  - {fileID: 11400000, guid: aa7da25358d2cdd45a0160b5e1b8f7e2, type: 2}
 --- !u!1 &1860945746
 GameObject:
   m_ObjectHideFlags: 0

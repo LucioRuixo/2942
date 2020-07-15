@@ -17,7 +17,7 @@ public class EnemyModel : MonoBehaviour
     public float shootingInterval;
 
     public static event Action onDeath;
-    public static event Action<float, float> onItemGeneration;
+    public static event Action<Vector2> onItemGeneration;
 
     void OnEnable()
     {
@@ -43,7 +43,7 @@ public class EnemyModel : MonoBehaviour
         int random = UnityEngine.Random.Range(0, 100);
 
         if (random < itemGenerationPercentage && onItemGeneration != null)
-            onItemGeneration(transform.position.x, transform.position.y);
+            onItemGeneration(transform.position);
     }
 
     public void Initialize(int collisionDamage, int itemGenerationPercentage)

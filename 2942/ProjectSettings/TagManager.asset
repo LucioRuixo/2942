@@ -10,6 +10,7 @@ TagManager:
   - Enemy Proyectile
   - Proyectile
   - Explosion
+  - Homing Missile
   layers:
   - Default
   - TransparentFX
